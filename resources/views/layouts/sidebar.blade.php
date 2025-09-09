@@ -1,6 +1,7 @@
-@php 
+ @php 
 $roomsTawang = \App\Models\Room::where('lokasi', 'tawang')->orderBy('name')->get();
     $rklsLengkongsari = \App\Models\Rkl::where('lokasi', 'lengkongsari')->orderBy('name')->get();
+     $rkcsCikalang = \App\Models\Rkc::where('lokasi', 'cikalang')->orderBy('name')->get();
 @endphp
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -46,6 +47,8 @@ $roomsTawang = \App\Models\Room::where('lokasi', 'tawang')->orderBy('name')->get
         <div id="collapseInventarisTawang" class="collapse {{ request()->is('tawang/inventaris*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Ruangan:</h6>
+                {{-- Variabel $roomsTawang perlu disediakan oleh AppServiceProvider juga jika belum ada --}}
+                @php $roomsTawang = \App\Models\Room::where('lokasi', 'tawang')->orderBy('name')->get(); @endphp
                 @forelse ($roomsTawang as $room)
                     <a class="collapse-item {{ request('room_id') == $room->id ? 'active' : '' }}"
                        href="{{ route('tawang.inventaris.index', ['room_id' => $room->id]) }}">
@@ -59,7 +62,6 @@ $roomsTawang = \App\Models\Room::where('lokasi', 'tawang')->orderBy('name')->get
     </li>
 
     <!-- Nav Item - Data Barang Tawang (Collapse) -->
-    {{-- PERBAIKAN: Logika 'active' diubah agar tidak bentrok dengan 'barangl*' --}}
     <li class="nav-item {{ request()->is('barang*') && !request()->is('barangl*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarang" aria-expanded="true" aria-controls="collapsebarang">
             <i class="fas fa-fw fa-archive"></i>
@@ -84,8 +86,6 @@ $roomsTawang = \App\Models\Room::where('lokasi', 'tawang')->orderBy('name')->get
         Kelurahan Lengkongsari
     </div>
     
-    {{-- PERBAIKAN: Tag </li> yang salah tempat dan merusak struktur sudah DIHAPUS dari sini --}}
-
     <!-- Nav Item - Data Ruangan Lengkongsari -->
     <li class="nav-item {{ request()->is('lengkongsari/rkl*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lengkongsari.rkl.index') }}">
@@ -116,13 +116,66 @@ $roomsTawang = \App\Models\Room::where('lokasi', 'tawang')->orderBy('name')->get
     </li>
 
     <!-- Nav Item - Data Barang Lengkongsari (Collapse) -->
-    {{-- PERBAIKAN: Dipindahkan ke sini agar urutannya logis --}}
     <li class="nav-item {{ request()->is('barangl*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarangl" aria-expanded="true" aria-controls="collapsebarangl">
             <i class="fas fa-fw fa-archive"></i>
             <span>Data Barang</span>
         </a>
         <div id="collapsebarangl" class="collapse {{ request()->is('barangl*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Pilih Data:</h6>
+                <a class="collapse-item" href="#">Tanah</a>
+                <a class="collapse-item" href="#">Peralatan & Mesin</a>
+                <a class="collapse-item" href="#">Gedung & Bangunan</a>
+                <a class="collapse-item" href="#">Rusak Berat</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Kelurahan Cikalang
+    </div>
+    
+    <!-- Nav Item - Data Ruangan Cikalang -->
+    <li class="nav-item {{ request()->is('cikalang/rkc*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('cikalang.rkc.index') }}">
+            <i class="fas fa-fw fa-door-closed"></i>
+            <span>Data Ruangan</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Data Inventori Ruangan Cikalang (Collapse) -->
+    <li class="nav-item {{ request()->is('cikalang/ikc*') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseIkcCikalang" aria-expanded="true" aria-controls="collapseIkcCikalang">
+            <i class="fas fa-fw fa-archive"></i>
+            <span>Data Inventori Ruangan</span>
+        </a>
+        <div id="collapseIkcCikalang" class="collapse {{ request()->is('cikalang/ikc*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Pilih Ruangan:</h6>
+                @forelse ($rkcsCikalang as $rkc)
+                    <a class="collapse-item {{ request('rkc_id') == $rkc->id ? 'active' : '' }}"
+                       href="{{ route('cikalang.ikc.index', ['rkc_id' => $rkc->id]) }}">
+                        {{ $rkc->name }}
+                    </a>
+                @empty
+                    <a class="collapse-item" href="{{ route('cikalang.rkc.create') }}">Tambah Ruangan Dulu</a>
+                @endforelse
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Data Barang Cikalang (Collapse) -->
+    <li class="nav-item {{ request()->is('barangc*') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarangc" aria-expanded="true" aria-controls="collapsebarangc">
+            <i class="fas fa-fw fa-archive"></i>
+            <span>Data Barang</span>
+        </a>
+        <div id="collapsebarangc" class="collapse {{ request()->is('barangc*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
                 <a class="collapse-item" href="#">Tanah</a>

@@ -5,6 +5,9 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RklController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\IklController;
+// Tambahkan controller untuk Cikalang
+use App\Http\Controllers\RkcController;
+use App\Http\Controllers\IkcController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,7 +27,7 @@ Route::prefix('tawang')->name('tawang.')->group(function () {
     Route::get('/inventaris/print', [InventarisController::class, 'pdf'])->name('inventaris.print');
     
     Route::resource('inventaris', InventarisController::class)
-           ->parameters(['inventaris' => 'inventaris']);
+            ->parameters(['inventaris' => 'inventaris']);
 });
 
 // ROUTE UNTUK KELURAHAN LENGKONGSARI
@@ -33,13 +36,19 @@ Route::prefix('lengkongsari')->name('lengkongsari.')->group(function () {
     Route::resource('rkl', RklController::class);
 
     Route::put('/ikl/{ikl}/move', [IklController::class, 'move'])->name('ikl.move');
-    
-    // ======================================================
-    // PERBAIKAN: Nama route diubah menjadi 'ikl.print'
-    // agar cocok dengan yang dipanggil di file view Anda.
-    // ======================================================
     Route::get('/ikl/print', [IklController::class, 'pdf'])->name('ikl.print');
     
     Route::resource('ikl', IklController::class);
 });
 
+// ROUTE UNTUK KELURAHAN CIKALANG
+Route::prefix('cikalang')->name('cikalang.')->group(function () {
+    // Note: Anda perlu menambahkan method pdf() di RkcController jika diperlukan
+    Route::get('/rkc/pdf', [RkcController::class, 'pdf'])->name('rkc.pdf');
+    Route::resource('rkc', RkcController::class);
+
+    Route::put('/ikc/{ikc}/move', [IkcController::class, 'move'])->name('ikc.move');
+    Route::get('/ikc/print', [IkcController::class, 'pdf'])->name('ikc.print');
+    
+    Route::resource('ikc', IkcController::class);
+});
