@@ -5,13 +5,6 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Data Ruangan Kecamatan Tawang</h1>
         <div>
-            {{-- ====================================================== --}}
-            {{-- PERBAIKAN: Semua nama route disesuaikan dengan web.php --}}
-            {{-- ====================================================== --}}
-            <a href="{{ route('tawang.room.pdf') }}" target="_blank" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm mr-2">
-                <i class="fas fa-print fa-sm text-white-50"></i> Cetak PDF
-            </a>
-            
             <a href="{{ route('tawang.room.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Tambah
             </a>

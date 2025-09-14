@@ -28,7 +28,7 @@ class IkcController extends Controller
         $ikcs = $query->latest()->get();
         $selectedRkc = Rkc::find($request->rkc_id);
 
-        return view('pages.ikc.index', compact('ikcs', 'rkcs', 'selectedRkc', 'lokasi'));
+        return view('pages.cikalang.ikc.index', compact('ikcs', 'rkcs', 'selectedRkc', 'lokasi'));
     }
 
     /**
@@ -38,7 +38,7 @@ class IkcController extends Controller
     {
         $rkcs = Rkc::where('lokasi', 'cikalang')->orderBy('name')->get();
         $lokasi = 'cikalang'; 
-        return view('pages.ikc.create', compact('rkcs', 'lokasi'));
+        return view('pages.cikalang.ikc.create', compact('rkcs', 'lokasi'));
     }
 
     /**
@@ -72,7 +72,7 @@ class IkcController extends Controller
     {
         $rkcs = Rkc::where('lokasi', 'cikalang')->orderBy('name')->get();
         $lokasi = 'cikalang';
-        return view('pages.ikc.edit', compact('ikc', 'rkcs', 'lokasi'));
+        return view('pages.cikalang.ikc.edit', compact('ikc', 'rkcs', 'lokasi'));
     }
 
     /**
@@ -144,7 +144,7 @@ class IkcController extends Controller
         $selectedRkc = Rkc::find($request->rkc_id);
         $tanggalCetak = now()->translatedFormat('d F Y');
 
-        $pdf = PDF::loadView('pages.ikc.print', compact('ikcs', 'selectedRkc', 'tanggalCetak', 'lokasi'));
+        $pdf = PDF::loadView('pages.cikalang.ikc.print', compact('ikcs', 'selectedRkc', 'tanggalCetak', 'lokasi'));
         
         $fileName = 'laporan-ikc-' . $lokasi . '-' . date('Y-m-d') . '.pdf';
         return $pdf->download($fileName);

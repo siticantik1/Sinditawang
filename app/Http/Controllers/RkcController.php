@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Rkc;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use PDF; // Tambahkan ini untuk fungsi PDF
 
 class RkcController extends Controller
 {
@@ -14,7 +15,7 @@ class RkcController extends Controller
     public function index()
     {
         $rkcs = Rkc::where('lokasi', 'cikalang')->orderBy('name')->get();
-        return view('pages.rkc.index', compact('rkcs'));
+        return view('pages.cikalang.rkc.index', compact('rkcs'));
     }
 
     /**
@@ -22,7 +23,7 @@ class RkcController extends Controller
      */
     public function create()
     {
-        return view('pages.rkc.create');
+        return view('pages.cikalang.rkc.create');
     }
 
     /**
@@ -50,7 +51,7 @@ class RkcController extends Controller
      */
     public function edit(Rkc $rkc)
     {
-        return view('pages.rkc.edit', compact('rkc'));
+        return view('pages.cikalang.rkc.edit', compact('rkc'));
     }
 
     /**
@@ -85,4 +86,21 @@ class RkcController extends Controller
         return redirect()->route('cikalang.rkc.index')
                          ->with('success', 'Data ruangan Cikalang berhasil dihapus.');
     }
+
+    /**
+     * Membuat laporan PDF untuk data ruangan Cikalang.
+     */
+    public function pdf()
+    {
+        $rkcs = Rkc::where('lokasi', 'cikalang')->orderBy('name')->get();
+        $tanggalCetak = now()->translatedFormat('d F Y');
+        $lokasi = 'cikalang';
+
+        // Pastikan Anda memiliki view 'pages.rkc.print'
+        $pdf = PDF::loadView('pages.cikalang.rkc.print', compact('rkcs', 'tanggalCetak', 'lokasi'));
+        
+        $fileName = 'laporan-ruangan-cikalang-' . date('Y-m-d') . '.pdf';
+        return $pdf->download($fileName);
+    }
 }
+
