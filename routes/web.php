@@ -5,6 +5,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RklController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\IklController;
+use App\Http\Controllers\TanahController;
 // Controller untuk Cikalang
 use App\Http\Controllers\RkcController;
 use App\Http\Controllers\IkcController;
@@ -34,6 +35,8 @@ Route::prefix('tawang')->name('tawang.')->group(function () {
     Route::get('/inventaris/print', [InventarisController::class, 'pdf'])->name('inventaris.print');
     Route::resource('inventaris', InventarisController::class)
            ->parameters(['inventaris' => 'inventaris']);
+    Route::get('tanah/print', [TanahController::class, 'print'])->name('tanah.print');
+    Route::resource('tanah', TanahController::class);
 });
 
 // ROUTE UNTUK KELURAHAN LENGKONGSARI

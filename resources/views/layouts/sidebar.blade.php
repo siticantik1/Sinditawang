@@ -71,7 +71,7 @@
         <div id="collapsebarang" class="collapse {{ request()->is('barang*') && !request()->is('barangl*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
-                <a class="collapse-item" href="#">Tanah</a>
+                <a class="collapse-item" href="{{ route('tawang.tanah.index') }}">Tanah</a>
                 <a class="collapse-item" href="#">Peralatan & Mesin</a>
                 <a class="collapse-item" href="#">Gedung & Bangunan</a>
                 <a class="collapse-item" href="#">Rusak Berat</a>
@@ -233,7 +233,7 @@
         <div id="collapsebarange" class="collapse {{ request()->is('barange*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
-                <a class="collapse-item" href="#">Tanah</a>
+                <a class="collapse-item" href="/pages/tanah">Tanah</a>
                 <a class="collapse-item" href="#">Peralatan & Mesin</a>
                 <a class="collapse-item" href="#">Gedung & Bangunan</a>
                 <a class="collapse-item" href="#">Rusak Berat</a>
