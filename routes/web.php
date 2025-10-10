@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+
+use App\Http\Controllers\DashboardController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RklController;
@@ -19,13 +23,17 @@ use App\Http\Controllers\IkkController;
 use App\Http\Controllers\RktController;
 use App\Http\Controllers\IktController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/dashboard', function () {
-    return view('pages.dashboard');
-})->name('dashboard');
+//Auth
+Route::get('/', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'authenticate']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/register', [AuthController::class, 'registerView']);
+Route::post('/register', [AuthController::class, 'register']);
+
+// SETELAH DIPERBAIKI
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 // ROUTE UNTUK KECAMATAN TAWANG
 Route::prefix('tawang')->name('tawang.')->group(function () {
