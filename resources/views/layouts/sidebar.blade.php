@@ -90,7 +90,7 @@
                 <h6 class="collapse-header">Pilih Ruangan:</h6>
                 @forelse ($tawangData['rooms'] as $room)
                     <a class="collapse-item {{ request('room_id') == $room->id ? 'active' : '' }}"
-                       href="{{ route('tawang.inventaris.index', ['room_id' => $room->id]) }}">
+                        href="{{ route('tawang.inventaris.index', ['room_id' => $room->id]) }}">
                         {{ $room->name }}
                     </a>
                 @empty
@@ -99,20 +99,21 @@
             </div>
         </div>
     </li>
-    <li class="nav-item {{ request()->is('tawang/tanah*') ? 'active' : '' }}">
+    {{-- REVISI: Logika active dan show diperbaiki untuk mencakup semua jenis barang --}}
+    <li class="nav-item {{ request()->is('tawang/tanah*') || request()->is('tawang/peralatan*') || request()->is('tawang/gedung*') || request()->is('tawang/jalan*') || request()->is('tawang/rusak*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarang" aria-expanded="true" aria-controls="collapsebarang">
             <i class="fas fa-fw fa-archive"></i>
             <span>Data Barang</span>
         </a>
-        <div id="collapsebarang" class="collapse {{ request()->is('tawang/tanah*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+        <div id="collapsebarang" class="collapse {{ request()->is('tawang/tanah*') || request()->is('tawang/peralatan*') || request()->is('tawang/gedung*') || request()->is('tawang/jalan*') || request()->is('tawang/rusak*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
-                {{-- REVISI: Link Tanah untuk Tawang dibuat dinamis --}}
+                {{-- REVISI: Semua href dan class active ditambahkan --}}
                 <a class="collapse-item {{ request()->is('tawang/tanah*') ? 'active' : '' }}" href="{{ route('lokasi.tanah.index', ['lokasi' => 'tawang']) }}">Tanah</a>
-                <a class="collapse-item" href="#">Peralatan & Mesin</a>
-                <a class="collapse-item" href="#">Gedung & Bangunan</a>
-                <a class="collapse-item" href="#">Jalan</a>
-                <a class="collapse-item" href="#">Rusak Berat</a>
+                <a class="collapse-item {{ request()->is('tawang/peralatan*') ? 'active' : '' }}" href="{{ route('lokasi.peralatan.index', ['lokasi' => 'tawang']) }}">Peralatan & Mesin</a>
+                <a class="collapse-item {{ request()->is('tawang/gedung*') ? 'active' : '' }}" href="{{ route('lokasi.gedung.index', ['lokasi' => 'tawang']) }}">Gedung & Bangunan</a>
+                <a class="collapse-item {{ request()->is('tawang/jalan*') ? 'active' : '' }}" href="{{ route('lokasi.jalan.index', ['lokasi' => 'tawang']) }}">Jalan</a>
+                <a class="collapse-item {{ request()->is('tawang/rusak*') ? 'active' : '' }}" href="{{ route('lokasi.rusak.index', ['lokasi' => 'tawang']) }}">Rusak Berat</a>
             </div>
         </div>
     </li>
@@ -147,7 +148,7 @@
                     <h6 class="collapse-header">Pilih Ruangan:</h6>
                     @forelse ($kelurahan['rooms'] as $room)
                         <a class="collapse-item {{ request($kelurahan['room_key'] . '_id') == $room->id ? 'active' : '' }}"
-                           href="{{ route($kelurahan['slug'] . '.' . $kelurahan['inventory_key'] . '.index', [$kelurahan['room_key'] . '_id' => $room->id]) }}">
+                            href="{{ route($kelurahan['slug'] . '.' . $kelurahan['inventory_key'] . '.index', [$kelurahan['room_key'] . '_id' => $room->id]) }}">
                             {{ $room->name }}
                         </a>
                     @empty
@@ -158,20 +159,21 @@
         </li>
     
         <!-- Nav Item - Data Barang (Collapse) -->
-        <li class="nav-item {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'active' : '' }}">
+        {{-- REVISI: Logika active dan show diperbaiki untuk mencakup semua jenis barang --}}
+        <li class="nav-item {{ request()->is($kelurahan['slug'] . '/tanah*') || request()->is($kelurahan['slug'] . '/peralatan*') || request()->is($kelurahan['slug'] . '/gedung*') || request()->is($kelurahan['slug'] . '/jalan*') || request()->is($kelurahan['slug'] . '/rusak*') ? 'active' : '' }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBarang{{ ucfirst($kelurahan['slug']) }}" aria-expanded="true" aria-controls="collapseBarang{{ ucfirst($kelurahan['slug']) }}">
                 <i class="fas fa-fw fa-archive"></i>
                 <span>Data Barang</span>
             </a>
-            <div id="collapseBarang{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+            <div id="collapseBarang{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['slug'] . '/tanah*') || request()->is($kelurahan['slug'] . '/peralatan*') || request()->is($kelurahan['slug'] . '/gedung*') || request()->is($kelurahan['slug'] . '/jalan*') || request()->is($kelurahan['slug'] . '/rusak*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Pilih Data:</h6>
-                    {{-- REVISI: Link Tanah untuk setiap kelurahan dibuat dinamis --}}
+                    {{-- REVISI: Semua href dan class active ditambahkan --}}
                     <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'active' : '' }}" href="{{ route('lokasi.tanah.index', ['lokasi' => $kelurahan['slug']]) }}">Tanah</a>
-                    <a class="collapse-item" href="#">Peralatan & Mesin</a>
-                    <a class="collapse-item" href="#">Gedung & Bangunan</a>
-                    <a class="collapse-item" href="#">Jalan</a>
-                    <a class="collapse-item" href="#">Rusak Berat</a>
+                    <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/peralatan*') ? 'active' : '' }}" href="{{ route('lokasi.peralatan.index', ['lokasi' => $kelurahan['slug']]) }}">Peralatan & Mesin</a>
+                    <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/gedung*') ? 'active' : '' }}" href="{{ route('lokasi.gedung.index', ['lokasi' => $kelurahan['slug']]) }}">Gedung & Bangunan</a>
+                    <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/jalan*') ? 'active' : '' }}" href="{{ route('lokasi.jalan.index', ['lokasi' => $kelurahan['slug']]) }}">Jalan</a>
+                    <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/rusak*') ? 'active' : '' }}" href="{{ route('lokasi.rusak.index', ['lokasi' => $kelurahan['slug']]) }}">Rusak Berat</a>
                 </div>
             </div>
         </li>
@@ -188,4 +190,3 @@
     </div>
 
 </ul>
-

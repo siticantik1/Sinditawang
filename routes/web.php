@@ -1,31 +1,35 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// --- CONTROLLER UTAMA & AUTENTIKASI ---
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\TanahController; // Controller tunggal untuk Tanah
 
-// Controller spesifik untuk Tawang
+// --- CONTROLLER DINAMIS (KIB) ---
+use App\Http\Controllers\TanahController;
+use App\Http\Controllers\PeralatanController;
+use App\Http\Controllers\GedungController;
+use App\Http\Controllers\JalanController;
+use App\Http\Controllers\RusakController;
+
+// --- CONTROLLER STATIS (PER LOKASI) ---
+// Tawang
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\InventarisController;
-
-// Controller spesifik untuk Lengkongsari
+// Lengkongsari
 use App\Http\Controllers\RklController;
 use App\Http\Controllers\IklController;
-
-// Controller spesifik untuk Cikalang
+// Cikalang
 use App\Http\Controllers\RkcController;
 use App\Http\Controllers\IkcController;
-
-// Controller spesifik untuk Empang
+// Empang
 use App\Http\Controllers\RkeController;
 use App\Http\Controllers\IkeController;
-
-// Controller spesifik untuk Kahuripan
+// Kahuripan
 use App\Http\Controllers\RkkController;
 use App\Http\Controllers\IkkController;
-
-// Controller spesifik untuk Tawangsari
+// Tawangsari
 use App\Http\Controllers\RktController;
 use App\Http\Controllers\IktController;
 
@@ -45,13 +49,30 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // --- RUTE DINAMIS HANYA UNTUK TANAH ---
+    // --- RUTE DINAMIS UNTUK KIB (KARTU INVENTARIS BARANG) ---
     Route::prefix('{lokasi}')
         ->whereIn('lokasi', ['tawang', 'lengkongsari', 'cikalang', 'empang', 'kahuripan', 'tawangsari'])
         ->name('lokasi.')
         ->group(function () {
+            // KIB A - Tanah
             Route::get('tanah/print', [TanahController::class, 'print'])->name('tanah.print');
             Route::resource('tanah', TanahController::class);
+
+            // KIB B - Peralatan dan Mesin
+            Route::get('peralatan/print', [PeralatanController::class, 'print'])->name('peralatan.print');
+            Route::resource('peralatan', PeralatanController::class);
+
+            // KIB C - Gedung dan Bangunan
+            Route::get('gedung/print', [GedungController::class, 'print'])->name('gedung.print');
+            Route::resource('gedung', GedungController::class);
+
+            // KIB D - Jalan, Irigasi, dan Jaringan
+            Route::get('jalan/print', [JalanController::class, 'print'])->name('jalan.print');
+            Route::resource('jalan', JalanController::class);
+
+            // Daftar Barang Rusak
+            Route::get('rusak/print', [RusakController::class, 'print'])->name('rusak.print');
+            Route::resource('rusak', RusakController::class); // <-- Diperbaiki dari Route::post
         });
 
     // --- RUTE STATIS UNTUK RUANGAN & INVENTARIS (PER LOKASI) ---
@@ -110,4 +131,3 @@ Route::middleware('auth')->group(function () {
         Route::resource('ikt', IktController::class);
     });
 });
-
