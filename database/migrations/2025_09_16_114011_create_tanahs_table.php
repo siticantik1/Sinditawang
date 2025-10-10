@@ -15,7 +15,7 @@ return new class extends Migration
     {
     Schema::create('tanahs', function (Blueprint $table) {
         $table->id();
-        $table->string('kecamatan'); // <-- TAMBAHKAN KOLOM INI
+        $table->string('lokasi')->nullable(); // Menambahkan kolom 'lokasi' setelah kolom 'id'<-- TAMBAHKAN KOLOM INI
         $table->string('nama_barang');
         $table->string('kode_barang');
         $table->string('register');

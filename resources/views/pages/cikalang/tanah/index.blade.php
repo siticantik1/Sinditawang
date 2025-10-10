@@ -4,9 +4,11 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-            <h3>Data Inventaris Tanah</h3>
-            {{-- FORM PENCARIAN --}}
-            <form action="{{ route('tawang.tanah.index') }}" method="GET" class="d-flex">
+            {{-- Judul dibuat dinamis menggunakan ucfirst() untuk membuat huruf pertama kapital --}}
+            <h3>Data Inventaris Tanah - {{ ucfirst($lokasi) }}</h3>
+            
+            {{-- FORM PENCARIAN DINAMIS --}}
+            <form action="{{ route('lokasi.tanah.index', ['lokasi' => $lokasi]) }}" method="GET" class="d-flex">
                 <input class="form-control me-2" type="search" name="search" placeholder="Cari nama/alamat..." value="{{ request('search') }}">
                 <button class="btn btn-outline-secondary" type="submit">Cari</button>
             </form>
@@ -14,10 +16,12 @@
     </div>
     <div class="card-body">
         <div class="d-flex justify-content-between mb-3">
-            <a href="{{ route('tawang.tanah.create') }}" class="btn btn-primary">
+            {{-- TOMBOL TAMBAH DATA DINAMIS --}}
+            <a href="{{ route('lokasi.tanah.create', ['lokasi' => $lokasi]) }}" class="btn btn-primary">
                 <i class="fas fa-plus-circle"></i> Tambah Data Baru
             </a>
-            <a href="{{ route('tawang.tanah.print') }}" target="_blank" class="btn btn-secondary">
+            {{-- TOMBOL CETAK DATA DINAMIS --}}
+            <a href="{{ route('lokasi.tanah.print', ['lokasi' => $lokasi]) }}" target="_blank" class="btn btn-secondary">
                 <i class="fas fa-print"></i> Cetak Data
             </a>
         </div>
@@ -30,7 +34,6 @@
         @endif
 
         <div class="table-responsive">
-            {{-- Menambahkan class table-hover agar baris menyala saat disentuh mouse --}}
             <table class="table table-bordered table-hover">
                 <thead class="table-light text-center">
                     <tr>
@@ -45,10 +48,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Looping data dari controller --}}
                     @forelse ($dataTanah as $item)
                         <tr>
-                            {{-- Menghitung nomor urut sesuai halaman pagination --}}
                             <td class="text-center">{{ $loop->iteration + $dataTanah->firstItem() - 1 }}</td>
                             <td>{{ $item->nama_barang }}</td>
                             <td>{{ $item->kode_barang }}</td>
@@ -57,10 +58,12 @@
                             <td>{{ $item->alamat }}</td>
                             <td class="text-end">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                             <td class="text-center">
-                                <a href="{{ route('tawang.tanah.edit', $item->id) }}" class="btn btn-sm btn-warning" title="Edit Data">
+                                {{-- TOMBOL EDIT DINAMIS --}}
+                                <a href="{{ route('lokasi.tanah.edit', ['lokasi' => $lokasi, 'tanah' => $item->id]) }}" class="btn btn-sm btn-warning" title="Edit Data">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('tawang.tanah.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin hapus data ini?')">
+                                {{-- FORM HAPUS DINAMIS --}}
+                                <form action="{{ route('lokasi.tanah.destroy', ['lokasi' => $lokasi, 'tanah' => $item->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin hapus data ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
@@ -84,9 +87,10 @@
             </table>
         </div>
 
-        {{-- MENAMPILKAN LINK HALAMAN (PAGINATION) --}}
+        {{-- PAGINATION LINKS --}}
         <div class="d-flex justify-content-end">
-            {{ $dataTanah->links() }}
+            {{-- Menambahkan appends agar parameter pencarian tidak hilang saat pindah halaman --}}
+            {{ $dataTanah->appends(['search' => request('search')])->links() }}
         </div>
     </div>
 </div>

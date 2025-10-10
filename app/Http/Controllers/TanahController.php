@@ -7,82 +7,113 @@ use Illuminate\Http\Request;
 
 class TanahController extends Controller
 {
-    // Variabel untuk menyimpan nilainya, yaitu "Tawang"
-    private $namaKecamatan = 'Tawang';
-
-    public function index(Request $request)
+    /**
+     * Menampilkan daftar data tanah berdasarkan lokasi dan pencarian.
+     */
+    public function index(Request $request, $lokasi)
     {
         $search = $request->query('search');
 
-        // PERBAIKAN: Panggil kolom 'kecamatan' sesuai dengan yang ada di database
-        $query = Tanah::where('kecamatan', $this->namaKecamatan);
+        // Query dimulai dengan memfilter berdasarkan parameter {lokasi} dari URL.
+        $query = Tanah::where('lokasi', $lokasi);
 
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('nama_barang', 'LIKE', "%{$search}%")
-                  ->orWhere('alamat', 'LIKE', "%{$search}%");
+                  ->orWhere('alamat', 'LIKE', "%{$search}%")
+                  ->orWhere('kode_barang', 'LIKE', "%{$search}%");
             });
         }
         
         $dataTanah = $query->latest()->paginate(10);
         
-        // Pastikan path view Anda benar, sesuaikan jika perlu
-        return view('tawang.tanah.index', compact('dataTanah'));
+        // Path view dibuat dinamis menggunakan variabel $lokasi.
+        // Pastikan Anda memiliki folder view untuk setiap lokasi (e.g., resources/views/pages/tawang/tanah, etc.)
+        return view("pages.{$lokasi}.tanah.index", compact('dataTanah', 'lokasi', 'search'));
     }
 
-    public function create()
+    /**
+     * Menampilkan form untuk membuat data tanah baru.
+     */
+    public function create($lokasi)
     {
-        return view('tawang.tanah.create');
+        return view("pages.{$lokasi}.tanah.create", compact('lokasi'));
     }
 
-    public function store(Request $request)
+    /**
+     * Menyimpan data tanah yang baru dibuat ke database.
+     */
+    public function store(Request $request, $lokasi)
     {
-        $request->validate([ 'nama_barang' => 'required', /* ... validasi lainnya ... */ ]);
+        $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            // Tambahkan validasi lain sesuai kebutuhan...
+        ]);
         
         $dataToStore = $request->all();
-        // PERBAIKAN: Simpan ke kolom 'kecamatan'
-        $dataToStore['kecamatan'] = $this->namaKecamatan;
+        // Kolom 'lokasi' diisi secara otomatis dari parameter URL.
+        $dataToStore['lokasi'] = $lokasi;
+        
         Tanah::create($dataToStore);
 
-        // Panggil nama route yang benar: 'tawang.tanah.index'
-        return redirect()->route('tawang.tanah.index')->with('success', 'Data tanah berhasil ditambahkan.');
+        // Redirect ke halaman index dari lokasi yang sesuai.
+        return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
+                         ->with('success', 'Data tanah berhasil ditambahkan.');
     }
 
-    public function edit(Tanah $tanah)
+    /**
+     * Menampilkan form untuk mengedit data tanah.
+     */
+    public function edit($lokasi, Tanah $tanah)
     {
-        // PERBAIKAN: Cek ke kolom 'kecamatan'
-        if ($tanah->kecamatan !== $this->namaKecamatan) {
-            abort(404);
+        // Pengaman: Pastikan data yang diedit sesuai dengan lokasinya.
+        if ($tanah->lokasi !== $lokasi) {
+            abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
-        return view('tawang.tanah.edit', compact('tanah'));
+        return view("pages.{$lokasi}.tanah.edit", compact('tanah', 'lokasi'));
     }
 
-    public function update(Request $request, Tanah $tanah)
+    /**
+     * Memperbarui data tanah di database.
+     */
+    public function update(Request $request, $lokasi, Tanah $tanah)
     {
-        if ($tanah->kecamatan !== $this->namaKecamatan) {
-            abort(404);
+        if ($tanah->lokasi !== $lokasi) {
+            abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
+
+        $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            // ...
+        ]);
+        
         $tanah->update($request->all());
 
-        // Panggil nama route yang benar: 'tawang.tanah.index'
-        return redirect()->route('tawang.tanah.index')->with('success', 'Data tanah berhasil diperbarui.');
+        return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
+                         ->with('success', 'Data tanah berhasil diperbarui.');
     }
 
-    public function destroy(Tanah $tanah)
+    /**
+     * Menghapus data tanah dari database.
+     */
+    public function destroy($lokasi, Tanah $tanah)
     {
-        if ($tanah->kecamatan !== $this->namaKecamatan) {
-            abort(404);
+        if ($tanah->lokasi !== $lokasi) {
+            abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
+        
         $tanah->delete();
 
-        // Panggil nama route yang benar: 'tawang.tanah.index'
-        return redirect()->route('tawang.tanah.index')->with('success', 'Data tanah berhasil dihapus.');
+        return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
+                         ->with('success', 'Data tanah berhasil dihapus.');
     }
 
-    public function print()
+    /**
+     * Menghasilkan halaman untuk dicetak (print).
+     */
+    public function print($lokasi)
     {
-        // PERBAIKAN: Ambil data dari kolom 'kecamatan'
-        $dataTanah = Tanah::where('kecamatan', $this->namaKecamatan)->latest()->get();
-        return view('tawang.tanah.print', compact('dataTanah'));
+        $dataTanah = Tanah::where('lokasi', $lokasi)->latest()->get();
+        return view("pages.{$lokasi}.tanah.print", compact('dataTanah', 'lokasi'));
     }
 }

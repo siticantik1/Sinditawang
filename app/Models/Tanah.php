@@ -11,25 +11,37 @@ class Tanah extends Model
 
     /**
      * Nama tabel yang terhubung dengan model ini.
-     * Laravel sebenarnya otomatis mendeteksi nama tabel 'tanahs' (bentuk jamak dari 'Tanah'),
-     * tapi menuliskannya secara eksplisit adalah praktik yang baik.
      */
     protected $table = 'tanahs';
 
     /**
-     * Mass Assignment Protection.
-     * 'guarded' adalah kebalikan dari 'fillable'.
-     * Dengan mengisi ['id'], kita memberitahu Laravel bahwa SEMUA kolom BOLEH diisi
-     * secara massal (mass assignment) KECUALI kolom 'id'.
-     * Ini cara yang praktis dan aman untuk model ini.
+     * Atribut yang dapat diisi secara massal (mass assignable).
+     *
+     * Menggunakan `$fillable` adalah praktik yang lebih aman daripada `$guarded`
+     * karena secara eksplisit hanya mengizinkan kolom-kolom yang terdaftar
+     * untuk diisi melalui metode `create()` atau `update()`.
+     * Pastikan semua kolom form Anda terdaftar di sini.
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'lokasi', // Kolom baru untuk menangani data dinamis per lokasi
+        'nama_barang',
+        'kode_barang',
+        'nup',
+        'luas',
+        'tahun_pengadaan',
+        'alamat',
+        'hak',
+        'tanggal_sertifikat',
+        'nomor_sertifikat',
+        'penggunaan',
+        'asal_usul',
+        'harga',
+        'keterangan',
+    ];
 
     /**
-     * Opsional: Tipe data casting.
-     * Ini untuk memastikan kolom tertentu selalu dibaca sebagai tipe data yang benar.
-     * Contoh: 'harga' akan selalu menjadi angka desimal (float),
-     * dan 'tanggal_sertifikat' akan selalu menjadi objek tanggal (Carbon).
+     * Tipe data casting untuk atribut model.
+     * Ini memastikan data yang diambil dari database memiliki tipe yang benar.
      */
     protected $casts = [
         'luas' => 'integer',

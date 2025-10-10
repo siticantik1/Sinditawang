@@ -68,7 +68,7 @@
     </li>
 
     <!--============================================
-    =            MENU KECAMATAN TAWANG             =
+    =            MENU KECAMATAN TAWANG            =
     =============================================-->
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
@@ -99,15 +99,16 @@
             </div>
         </div>
     </li>
-    <li class="nav-item {{ request()->is('barang*') && !request()->is('barangl*') ? 'active' : '' }}">
+    <li class="nav-item {{ request()->is('tawang/tanah*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarang" aria-expanded="true" aria-controls="collapsebarang">
             <i class="fas fa-fw fa-archive"></i>
             <span>Data Barang</span>
         </a>
-        <div id="collapsebarang" class="collapse {{ request()->is('barang*') && !request()->is('barangl*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+        <div id="collapsebarang" class="collapse {{ request()->is('tawang/tanah*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
-                <a class="collapse-item" href="#">Tanah</a>
+                {{-- REVISI: Link Tanah untuk Tawang dibuat dinamis --}}
+                <a class="collapse-item {{ request()->is('tawang/tanah*') ? 'active' : '' }}" href="{{ route('lokasi.tanah.index', ['lokasi' => 'tawang']) }}">Tanah</a>
                 <a class="collapse-item" href="#">Peralatan & Mesin</a>
                 <a class="collapse-item" href="#">Gedung & Bangunan</a>
                 <a class="collapse-item" href="#">Jalan</a>
@@ -157,15 +158,16 @@
         </li>
     
         <!-- Nav Item - Data Barang (Collapse) -->
-        <li class="nav-item {{ request()->is($kelurahan['item_key'] . '*') ? 'active' : '' }}">
+        <li class="nav-item {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'active' : '' }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBarang{{ ucfirst($kelurahan['slug']) }}" aria-expanded="true" aria-controls="collapseBarang{{ ucfirst($kelurahan['slug']) }}">
                 <i class="fas fa-fw fa-archive"></i>
                 <span>Data Barang</span>
             </a>
-            <div id="collapseBarang{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['item_key'] . '*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+            <div id="collapseBarang{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Pilih Data:</h6>
-                    <a class="collapse-item" href="#">Tanah</a>
+                    {{-- REVISI: Link Tanah untuk setiap kelurahan dibuat dinamis --}}
+                    <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'active' : '' }}" href="{{ route('lokasi.tanah.index', ['lokasi' => $kelurahan['slug']]) }}">Tanah</a>
                     <a class="collapse-item" href="#">Peralatan & Mesin</a>
                     <a class="collapse-item" href="#">Gedung & Bangunan</a>
                     <a class="collapse-item" href="#">Jalan</a>
