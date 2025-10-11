@@ -73,7 +73,7 @@
                     @forelse ($dataRusak as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataRusak->firstItem() - 1 }}</td>
-                        <td>{{ $item->id_pemda }}</td>
+                        <td>{{ $item->no_id_pemda }}</td>
                         <td>{{ $item->nama_barang }}</td>
                         <td>{{ $item->spesifikasi }}</td>
                         <td>{{ $item->no_polisi }}</td>
