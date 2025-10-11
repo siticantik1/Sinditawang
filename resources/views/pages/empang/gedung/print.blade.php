@@ -4,86 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Data Gedung & Bangunan - {{ ucfirst($lokasi) }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            width: 95%;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            font-size: 12px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+        body { font-family: 'Times New Roman', Times, serif; }
+        .table-bordered th, .table-bordered td { border: 1px solid black !important; vertical-align: middle; font-size: 8px; padding: 2px 4px; }
+        thead { background-color: #e9ecef; }
         @media print {
-            .no-print {
-                display: none;
-            }
+            @page { size: landscape; margin: 0.5cm; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
 <body onload="window.print()">
-    <div class="container">
-        <h1>KARTU INVENTARIS BARANG (KIB) C - GEDUNG DAN BANGUNAN</h1>
-        <h3>Lokasi: {{ strtoupper($lokasi) }}</h3>
-
-        <table>
-            <thead>
+    <div class="container-fluid">
+        <div class="text-center mb-4">
+            <h5 class="mb-0">KARTU INVENTARIS BARANG (KIB) C</h5>
+            <h5 class="mb-0">GEDUNG DAN BANGUNAN</h5>
+            <h6>SKPD: KECAMATAN {{ strtoupper($lokasi) }}</h6>
+        </div>
+        <table class="table table-bordered table-sm">
+            <thead class="text-center">
                 <tr>
-                    <th>No</th>
-                    <th>Jenis Barang / Nama Barang</th>
-                    <th>Nomor Kode / Register</th>
-                    <th>Kondisi (B/KB/RB)</th>
-                    <th>Konstruksi Bertingkat / Beton</th>
-                    <th>Luas Lantai (M2)</th>
-                    <th>Alamat</th>
-                    <th>Tgl/No Dokumen</th>
-                    <th>Luas Tanah (M2)</th>
-                    <th>Status Tanah</th>
-                    <th>Kode Tanah</th>
-                    <th>Asal-usul</th>
-                    <th>Harga (Rp)</th>
-                    <th>Keterangan</th>
+                    <th rowspan="2" class="align-middle">No</th>
+                    <th rowspan="2" class="align-middle">Jenis Barang / Nama Barang</th>
+                    <th colspan="2">Nomor</th>
+                    <th rowspan="2" class="align-middle">Kondisi Bangunan (B, KB, RB)</th>
+                    <th colspan="2">Konstruksi Bangunan</th>
+                    <th rowspan="2" class="align-middle">Luas Lantai (M2)</th>
+                    <th rowspan="2" class="align-middle">Letak / Lokasi Alamat</th>
+                    <th colspan="2">Dokumen Gedung</th>
+                    <th rowspan="2" class="align-middle">Luas (M2)</th>
+                    <th rowspan="2" class="align-middle">Status Tanah</th>
+                    <th rowspan="2" class="align-middle">Nomor Kode Tanah</th>
+                    <th rowspan="2" class="align-middle">Asal-usul</th>
+                    <th rowspan="2" class="align-middle">Harga (Rp)</th>
+                    <th rowspan="2" class="align-middle">Ket.</th>
+                </tr>
+                <tr>
+                    <th>Kode Barang</th>
+                    <th>Register</th>
+                    <th>Bertingkat / Tidak</th>
+                    <th>Beton / Tidak</th>
+                    <th>Tanggal</th>
+                    <th>Nomor</th>
+                </tr>
+                 <tr>
+                    @for ($i = 1; $i <= 17; $i++)
+                        <th>({{ $i }})</th>
+                    @endfor
                 </tr>
             </thead>
             <tbody>
-                @forelse ($dataGedung as $gedung)
+                @forelse ($dataGedung as $item)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $gedung->jenis_barang }}</td>
-                    <td>{{ $gedung->kode_barang }} / {{ $gedung->nomor_register }}</td>
-                    <td>{{ $gedung->kondisi }}</td>
-                    <td>{{ $gedung->konstruksi_bertingkat }} / {{ $gedung->konstruksi_beton }}</td>
-                    <td>{{ $gedung->luas_lantai }}</td>
-                    <td>{{ $gedung->alamat }}</td>
-                    <td>{{ $gedung->dokumen_tanggal }} / {{ $gedung->dokumen_nomor }}</td>
-                    <td>{{ $gedung->luas_tanah }}</td>
-                    <td>{{ $gedung->status_tanah }}</td>
-                    <td>{{ $gedung->nomor_kode_tanah }}</td>
-                    <td>{{ $gedung->asal_usul }}</td>
-                    <td>{{ number_format($gedung->harga, 0, ',', '.') }}</td>
-                    <td>{{ $gedung->keterangan }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+                    <td>{{ $item->jenis_barang }}</td>
+                    <td>{{ $item->kode_barang }}</td>
+                    <td class="text-center">{{ $item->nomor_register }}</td>
+                    <td class="text-center">{{ $item->kondisi_bangunan }}</td>
+                    <td class="text-center">{{ $item->bertingkat }}</td>
+                    <td class="text-center">{{ $item->beton }}</td>
+                    <td class="text-right">{{ $item->luas_lantai }}</td>
+                    <td>{{ $item->letak_lokasi }}</td>
+                    <td class="text-center">{{ $item->dokumen_tanggal ? \Carbon\Carbon::parse($item->dokumen_tanggal)->format('d-m-Y') : '' }}</td>
+                    <td>{{ $item->dokumen_nomor }}</td>
+                    <td class="text-right">{{ $item->luas }}</td>
+                    <td>{{ $item->status_tanah }}</td>
+                    <td>{{ $item->kode_tanah }}</td>
+                    <td>{{ $item->asal_usul }}</td>
+                    <td class="text-right">{{ number_format($item->harga, 2, ',', '.') }}</td>
+                    <td>{{ $item->keterangan }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="14" style="text-align: center;">Data tidak ditemukan.</td>
+                    <td colspan="17" class="text-center">Belum ada data.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -91,3 +85,4 @@
     </div>
 </body>
 </html>
+
