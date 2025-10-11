@@ -13,6 +13,9 @@ use App\Http\Controllers\GedungController;
 use App\Http\Controllers\JalanController;
 use App\Http\Controllers\RusakController;
 
+//--- CONTROLLER EXPORT
+use App\Http\Controllers\ExportController;
+
 // --- CONTROLLER STATIS (PER LOKASI) ---
 // Tawang
 use App\Http\Controllers\RoomController;
@@ -130,4 +133,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/ikt/print', [IktController::class, 'pdf'])->name('ikt.print');
         Route::resource('ikt', IktController::class);
     });
+
+    Route::get('/export', [ExportController::class,  'export']);
 });
