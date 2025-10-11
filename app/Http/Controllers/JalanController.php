@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jalan; // Pastikan Anda membuat model Jalan
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class JalanController extends Controller
 {
@@ -43,22 +44,23 @@ class JalanController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
+        // REVISI: Validasi disesuaikan dengan skema database
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'nullable|string|max:255',
-            'konstruksi' => 'nullable|string|max:255',
+            'nomor_register' => 'required|string|max:255',
+            'konstruksi' => 'required|string|max:255',
             'panjang' => 'nullable|numeric',
             'lebar' => 'nullable|numeric',
             'luas' => 'nullable|numeric',
-            'letak_lokasi' => 'nullable|string',
+            'letak_lokasi' => 'required|string',
             'dokumen_tanggal' => 'nullable|date',
             'dokumen_nomor' => 'nullable|string|max:255',
-            'status_tanah' => 'nullable|string|max:255',
+            'status_tanah' => 'required|string|max:255',
             'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'nullable|string|max:255',
-            'harga' => 'nullable|numeric',
-            'kondisi' => 'nullable|string|max:255',
+            'asal_usul' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'kondisi' => ['required', Rule::in(['B', 'KB', 'RB'])],
             'keterangan' => 'nullable|string',
         ]);
         
@@ -91,22 +93,23 @@ class JalanController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
+        // REVISI: Validasi disesuaikan dengan skema database
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'nullable|string|max:255',
-            'konstruksi' => 'nullable|string|max:255',
+            'nomor_register' => 'required|string|max:255',
+            'konstruksi' => 'required|string|max:255',
             'panjang' => 'nullable|numeric',
             'lebar' => 'nullable|numeric',
             'luas' => 'nullable|numeric',
-            'letak_lokasi' => 'nullable|string',
+            'letak_lokasi' => 'required|string',
             'dokumen_tanggal' => 'nullable|date',
             'dokumen_nomor' => 'nullable|string|max:255',
-            'status_tanah' => 'nullable|string|max:255',
+            'status_tanah' => 'required|string|max:255',
             'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'nullable|string|max:255',
-            'harga' => 'nullable|numeric',
-            'kondisi' => 'nullable|string|max:255',
+            'asal_usul' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'kondisi' => ['required', Rule::in(['B', 'KB', 'RB'])],
             'keterangan' => 'nullable|string',
         ]);
         
@@ -140,3 +143,4 @@ class JalanController extends Controller
         return view("pages.{$lokasi}.jalan.print", compact('dataJalan', 'lokasi'));
     }
 }
+

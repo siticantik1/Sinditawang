@@ -205,7 +205,9 @@ class ExportController extends Controller
                     case 'tawangsari': $modelClass = Ikt::class; break;
                 }
                 if ($modelClass) {
-                    $collection = $modelClass::get(); 
+                    // Diasumsikan model inventaris memiliki relasi ke ruangan, dan ruangan punya lokasi
+                    // Ini adalah contoh query, mungkin perlu disesuaikan dengan struktur relasi Anda
+                    $collection = $modelClass::get(); // Ini mungkin perlu query yang lebih kompleks
                     foreach ($collection as $key => $item) {
                         $data[] = [$key + 1, $item->nama_barang, $item->kode_barang, $item->merk, $item->jumlah, $item->satuan, $item->tahun_perolehan, $item->harga, $item->kondisi, $item->keterangan];
                     }

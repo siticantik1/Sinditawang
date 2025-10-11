@@ -13,23 +13,23 @@ return new class extends Migration
     {
         Schema::create('jalans', function (Blueprint $table) {
             $table->id();
+            $table->string('lokasi');
             $table->string('jenis_barang');
             $table->string('kode_barang')->nullable();
-            $table->string('nomor_register')->nullable();
-            $table->string('konstruksi')->nullable();
-            $table->decimal('panjang', 10, 2)->nullable();
-            $table->decimal('lebar', 10, 2)->nullable();
-            $table->decimal('luas', 10, 2)->nullable();
-            $table->text('letak_lokasi')->nullable();
+            $table->string('nomor_register');
+            $table->string('konstruksi');
+            $table->integer('panjang')->nullable(); // KM
+            $table->integer('lebar')->nullable(); // M
+            $table->integer('luas')->nullable(); // M2
+            $table->string('letak_lokasi');
             $table->date('dokumen_tanggal')->nullable();
             $table->string('dokumen_nomor')->nullable();
-            $table->string('status_tanah')->nullable();
+            $table->string('status_tanah');
             $table->string('kode_tanah')->nullable();
-            $table->string('asal_usul')->nullable();
-            $table->decimal('harga', 15, 2)->nullable();
-            $table->string('kondisi')->nullable();
+            $table->string('asal_usul');
+            $table->decimal('harga', 15, 2);
+            $table->enum('kondisi', ['B', 'KB', 'RB']); // Baik, Kurang Baik, Rusak Berat
             $table->text('keterangan')->nullable();
-            $table->string('lokasi');
             $table->timestamps();
         });
     }
@@ -42,3 +42,4 @@ return new class extends Migration
         Schema::dropIfExists('jalans');
     }
 };
+

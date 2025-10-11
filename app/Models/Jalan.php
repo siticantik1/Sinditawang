@@ -10,11 +10,15 @@ class Jalan extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * Nama tabel yang terhubung dengan model ini.
+     */
+    protected $table = 'jalans';
+
+    /**
+     * Atribut yang dapat diisi secara massal (mass assignable).
      */
     protected $fillable = [
+        'lokasi',
         'jenis_barang',
         'kode_barang',
         'nomor_register',
@@ -31,6 +35,17 @@ class Jalan extends Model
         'harga',
         'kondisi',
         'keterangan',
-        'lokasi',
+    ];
+
+    /**
+     * Tipe data casting untuk atribut model.
+     */
+    protected $casts = [
+        'dokumen_tanggal' => 'date',
+        'harga' => 'float',
+        'panjang' => 'integer',
+        'lebar' => 'integer',
+        'luas' => 'integer',
     ];
 }
+
