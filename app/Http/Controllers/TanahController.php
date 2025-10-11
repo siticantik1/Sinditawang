@@ -13,8 +13,6 @@ class TanahController extends Controller
     public function index(Request $request, $lokasi)
     {
         $search = $request->query('search');
-
-        // Query dimulai dengan memfilter berdasarkan parameter {lokasi} dari URL.
         $query = Tanah::where('lokasi', $lokasi);
 
         if ($search) {
@@ -26,9 +24,6 @@ class TanahController extends Controller
         }
         
         $dataTanah = $query->latest()->paginate(10);
-        
-        // Path view dibuat dinamis menggunakan variabel $lokasi.
-        // Pastikan Anda memiliki folder view untuk setiap lokasi (e.g., resources/views/pages/tawang/tanah, etc.)
         return view("pages.{$lokasi}.tanah.index", compact('dataTanah', 'lokasi', 'search'));
     }
 
@@ -45,18 +40,28 @@ class TanahController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
+        // REVISI: Validasi disesuaikan dengan semua kolom di form
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            // Tambahkan validasi lain sesuai kebutuhan...
+            'kode_barang' => 'required|string|max:255',
+            'register' => 'required|string|max:255',
+            'luas' => 'required|integer',
+            'tahun_pengadaan' => 'required|digits:4',
+            'alamat' => 'required|string',
+            'status_hak' => 'required|string|max:255',
+            'tanggal_sertifikat' => 'nullable|date',
+            'nomor_sertifikat' => 'nullable|string|max:255',
+            'penggunaan' => 'required|string|max:255',
+            'asal_usul' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'keterangan' => 'nullable|string',
         ]);
         
         $dataToStore = $request->all();
-        // Kolom 'lokasi' diisi secara otomatis dari parameter URL.
         $dataToStore['lokasi'] = $lokasi;
         
         Tanah::create($dataToStore);
 
-        // Redirect ke halaman index dari lokasi yang sesuai.
         return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data tanah berhasil ditambahkan.');
     }
@@ -66,7 +71,6 @@ class TanahController extends Controller
      */
     public function edit($lokasi, Tanah $tanah)
     {
-        // Pengaman: Pastikan data yang diedit sesuai dengan lokasinya.
         if ($tanah->lokasi !== $lokasi) {
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
@@ -82,9 +86,21 @@ class TanahController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
+        // REVISI: Validasi disesuaikan dengan semua kolom di form
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            // ...
+            'kode_barang' => 'required|string|max:255',
+            'register' => 'required|string|max:255',
+            'luas' => 'required|integer',
+            'tahun_pengadaan' => 'required|digits:4',
+            'alamat' => 'required|string',
+            'status_hak' => 'required|string|max:255',
+            'tanggal_sertifikat' => 'nullable|date',
+            'nomor_sertifikat' => 'nullable|string|max:255',
+            'penggunaan' => 'required|string|max:255',
+            'asal_usul' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'keterangan' => 'nullable|string',
         ]);
         
         $tanah->update($request->all());
@@ -117,3 +133,4 @@ class TanahController extends Controller
         return view("pages.{$lokasi}.tanah.print", compact('dataTanah', 'lokasi'));
     }
 }
+

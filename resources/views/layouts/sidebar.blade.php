@@ -68,7 +68,7 @@
     </li>
 
     <!--============================================
-    =            MENU KECAMATAN TAWANG            =
+    =            MENU KECAMATAN TAWANG             =
     =============================================-->
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
@@ -99,7 +99,6 @@
             </div>
         </div>
     </li>
-    {{-- REVISI: Logika active dan show diperbaiki untuk mencakup semua jenis barang --}}
     <li class="nav-item {{ request()->is('tawang/tanah*') || request()->is('tawang/peralatan*') || request()->is('tawang/gedung*') || request()->is('tawang/jalan*') || request()->is('tawang/rusak*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarang" aria-expanded="true" aria-controls="collapsebarang">
             <i class="fas fa-fw fa-archive"></i>
@@ -108,7 +107,6 @@
         <div id="collapsebarang" class="collapse {{ request()->is('tawang/tanah*') || request()->is('tawang/peralatan*') || request()->is('tawang/gedung*') || request()->is('tawang/jalan*') || request()->is('tawang/rusak*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
-                {{-- REVISI: Semua href dan class active ditambahkan --}}
                 <a class="collapse-item {{ request()->is('tawang/tanah*') ? 'active' : '' }}" href="{{ route('lokasi.tanah.index', ['lokasi' => 'tawang']) }}">Tanah</a>
                 <a class="collapse-item {{ request()->is('tawang/peralatan*') ? 'active' : '' }}" href="{{ route('lokasi.peralatan.index', ['lokasi' => 'tawang']) }}">Peralatan & Mesin</a>
                 <a class="collapse-item {{ request()->is('tawang/gedung*') ? 'active' : '' }}" href="{{ route('lokasi.gedung.index', ['lokasi' => 'tawang']) }}">Gedung & Bangunan</a>
@@ -121,7 +119,7 @@
 
 
     <!--========================================
-    =            LOOP MENU KELURAHAN           =
+    =            LOOP MENU KELURAHAN             =
     =========================================-->
     @foreach ($allKelurahan as $kelurahan)
         <hr class="sidebar-divider">
@@ -140,7 +138,7 @@
         <!-- Nav Item - Data Inventori Ruangan (Collapse) -->
         <li class="nav-item {{ request()->is($kelurahan['slug'] . '/' . $kelurahan['inventory_key'] . '*') ? 'active' : '' }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInventori{{ ucfirst($kelurahan['slug']) }}" aria-expanded="true" aria-controls="collapseInventori{{ ucfirst($kelurahan['slug']) }}">
-                <i class="fas fa-fw fa-archive"></i>
+                <i class="fas fa-fw fa-boxes"></i>
                 <span>Data Inventori Ruangan</span>
             </a>
             <div id="collapseInventori{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['slug'] . '/' . $kelurahan['inventory_key'] . '*') ? 'show' : '' }}" data-parent="#accordionSidebar">
@@ -159,7 +157,6 @@
         </li>
     
         <!-- Nav Item - Data Barang (Collapse) -->
-        {{-- REVISI: Logika active dan show diperbaiki untuk mencakup semua jenis barang --}}
         <li class="nav-item {{ request()->is($kelurahan['slug'] . '/tanah*') || request()->is($kelurahan['slug'] . '/peralatan*') || request()->is($kelurahan['slug'] . '/gedung*') || request()->is($kelurahan['slug'] . '/jalan*') || request()->is($kelurahan['slug'] . '/rusak*') ? 'active' : '' }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBarang{{ ucfirst($kelurahan['slug']) }}" aria-expanded="true" aria-controls="collapseBarang{{ ucfirst($kelurahan['slug']) }}">
                 <i class="fas fa-fw fa-archive"></i>
@@ -168,7 +165,6 @@
             <div id="collapseBarang{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['slug'] . '/tanah*') || request()->is($kelurahan['slug'] . '/peralatan*') || request()->is($kelurahan['slug'] . '/gedung*') || request()->is($kelurahan['slug'] . '/jalan*') || request()->is($kelurahan['slug'] . '/rusak*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Pilih Data:</h6>
-                    {{-- REVISI: Semua href dan class active ditambahkan --}}
                     <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/tanah*') ? 'active' : '' }}" href="{{ route('lokasi.tanah.index', ['lokasi' => $kelurahan['slug']]) }}">Tanah</a>
                     <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/peralatan*') ? 'active' : '' }}" href="{{ route('lokasi.peralatan.index', ['lokasi' => $kelurahan['slug']]) }}">Peralatan & Mesin</a>
                     <a class="collapse-item {{ request()->is($kelurahan['slug'] . '/gedung*') ? 'active' : '' }}" href="{{ route('lokasi.gedung.index', ['lokasi' => $kelurahan['slug']]) }}">Gedung & Bangunan</a>
@@ -180,6 +176,29 @@
     @endforeach
     <!--====  End of LOOP MENU KELURAHAN  ====-->
 
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Laporan & Pengaturan
+    </div>
+
+    <!-- Nav Item - Laporan -->
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-file-alt"></i>
+            <span>Laporan Keseluruhan</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Account -->
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-user-circle"></i>
+            <span>Account</span>
+        </a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -190,3 +209,4 @@
     </div>
 
 </ul>
+

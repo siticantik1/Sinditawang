@@ -16,21 +16,17 @@ class Tanah extends Model
 
     /**
      * Atribut yang dapat diisi secara massal (mass assignable).
-     *
-     * Menggunakan `$fillable` adalah praktik yang lebih aman daripada `$guarded`
-     * karena secara eksplisit hanya mengizinkan kolom-kolom yang terdaftar
-     * untuk diisi melalui metode `create()` atau `update()`.
-     * Pastikan semua kolom form Anda terdaftar di sini.
+     * Pastikan semua kolom dari form Anda terdaftar di sini.
      */
     protected $fillable = [
-        'lokasi', // Kolom baru untuk menangani data dinamis per lokasi
+        'lokasi',
         'nama_barang',
         'kode_barang',
-        'nup',
+        'register', // Disesuaikan dengan migrasi
         'luas',
         'tahun_pengadaan',
         'alamat',
-        'hak',
+        'status_hak', // Disesuaikan dengan migrasi
         'tanggal_sertifikat',
         'nomor_sertifikat',
         'penggunaan',
@@ -41,7 +37,6 @@ class Tanah extends Model
 
     /**
      * Tipe data casting untuk atribut model.
-     * Ini memastikan data yang diambil dari database memiliki tipe yang benar.
      */
     protected $casts = [
         'luas' => 'integer',
@@ -50,3 +45,4 @@ class Tanah extends Model
         'tanggal_sertifikat' => 'date',
     ];
 }
+

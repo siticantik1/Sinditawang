@@ -40,23 +40,39 @@ use App\Http\Controllers\IktController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| Di sini Anda dapat mendaftarkan rute web untuk aplikasi Anda. Rute-rute
+| ini dimuat oleh RouteServiceProvider dan semuanya akan
+| ditetapkan ke grup middleware "web". Buat sesuatu yang hebat!
+|
 */
 
 // --- RUTE PUBLIK & AUTENTIKASI ---
-Route::get('/', [AuthController::class, 'login'])->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Rute utama akan mengarahkan ke dashboard jika sudah login.
+// Jika belum, middleware 'auth' akan otomatis mengarahkan ke halaman '/login'.
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+})->middleware('auth');
+
 
 // --- RUTE YANG MEMBUTUHKAN AUTENTIKASI ---
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // --- RUTE DINAMIS UNTUK KIB (KARTU INVENTARIS BARANG) ---
+    // --- RUTE DINAMIS UNTUK KIB DAN EXPORT ---
     Route::prefix('{lokasi}')
         ->whereIn('lokasi', ['tawang', 'lengkongsari', 'cikalang', 'empang', 'kahuripan', 'tawangsari'])
         ->name('lokasi.')
         ->group(function () {
+            
+            // Route untuk export Excel (DIPINDAHKAN KE SINI)
+            Route::get('export/{menu}', [ExportController::class, 'export'])->name('export.excel');
+
             // KIB A - Tanah
             Route::get('tanah/print', [TanahController::class, 'print'])->name('tanah.print');
             Route::resource('tanah', TanahController::class);
@@ -75,7 +91,7 @@ Route::middleware('auth')->group(function () {
 
             // Daftar Barang Rusak
             Route::get('rusak/print', [RusakController::class, 'print'])->name('rusak.print');
-            Route::resource('rusak', RusakController::class); // <-- Diperbaiki dari Route::post
+            Route::resource('rusak', RusakController::class);
         });
 
     // --- RUTE STATIS UNTUK RUANGAN & INVENTARIS (PER LOKASI) ---
@@ -133,6 +149,5 @@ Route::middleware('auth')->group(function () {
         Route::get('/ikt/print', [IktController::class, 'pdf'])->name('ikt.print');
         Route::resource('ikt', IktController::class);
     });
-
-    Route::get('/export', [ExportController::class,  'export']);
 });
+

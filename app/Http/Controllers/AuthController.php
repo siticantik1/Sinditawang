@@ -9,73 +9,112 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login() 
+    /**
+     * Menampilkan halaman login.
+     */
+    public function login()
     {
+        // REVISI: Path view disesuaikan dengan struktur folder Anda.
         return view('pages.auth.login');
     }
 
-        public function authenticate(Request $request)
-        {
+    /**
+     * Menampilkan halaman registrasi.
+     */
+    public function registerView()
+    {
+        // REVISI: Path view disesuaikan dengan struktur folder Anda.
+        return view('pages.auth.register');
+    }
+
+    /**
+     * Memproses pendaftaran user baru.
+     */
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id' => 2, // Default role_id untuk 'User'
+            'status' => 'submitted', // Status default saat mendaftar
+        ]);
+
+        return redirect()->route('login')->with('success', 'Berhasil mendaftar, akun Anda sedang menunggu persetujuan admin.');
+    }
+
+    /**
+     * Memproses autentikasi user.
+     */
+    public function authenticate(Request $request)
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
-         if (Auth::attempt($credentials)) {
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // Cek status akun setelah login berhasil
+            if ($user->status === 'submitted') {
+                Auth::logout(); // Langsung logout kembali
+                return back()->withErrors(['email' => 'Akun Anda masih menunggu persetujuan admin.'])->onlyInput('email');
+            }
+
+            if ($user->status === 'rejected') {
+                Auth::logout(); // Langsung logout kembali
+                return back()->withErrors(['email' => 'Akun Anda telah ditolak oleh admin.'])->onlyInput('email');
+            }
+            
+            // Jika status 'approved', lanjutkan
             $request->session()->regenerate();
 
-            $userStatus = Auth::user()->status;
+            // Peta untuk mengarahkan nama user ke slug lokasi
+            $locationMap = [
+                'Kecamatan Tawang' => 'tawang',
+                'Kelurahan Lengkongsari' => 'lengkongsari',
+                'Kelurahan Cikalang' => 'cikalang',
+                'Kelurahan Empang' => 'empang',
+                'Kelurahan Kahuripan' => 'kahuripan',
+                'Kelurahan Tawangsari' => 'tawangsari',
+            ];
 
-            if (Auth::user()->status == 'submitted') {
-                return back()->withErrors([
-                    'email' => 'Akun anda masih persetujuan admin',
-                ]);
-            } else if (Auth::user()->status == 'rejected') {
-                return back()->withErrors([
-                'email' => 'Akun anda telah di tolak admin',
-            ]);
+            // Jika user adalah Admin, arahkan ke dashboard utama
+            if ($user->name === 'Admin SINDI') {
+                return redirect()->intended('dashboard');
             }
- 
+
+            // Jika user adalah user lokasi, arahkan ke halaman aset wilayahnya
+            if (array_key_exists($user->name, $locationMap)) {
+                $lokasi = $locationMap[$user->name];
+                return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi]);
+            }
+
+            // Pengalihan default jika tidak ada peran khusus
             return redirect()->intended('dashboard');
         }
- 
+
         return back()->withErrors([
-            'email' => 'Terjadi kesalahan, periksa kembali email atau password anda.',
+            'email' => 'Email atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
-        }  
-        
-        public function registerView()
-         {
-            return view('pages.auth.register');
-        }
+    }
 
-        public function register(Request $request) 
-        {
-            $validated = $request->validate([
-                'name' => ['required'],
-                'email' => ['required', 'email'],
-                'password' => ['required'],
-            ]);
-
-            $user = new User();
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->password = Hash::make($request->input('password'));
-            $user->role_id = 2; // =>User
-            $user->saveOrFail();
-
-            return redirect('/')->with('succes', 'Berhasil mendaftarkan akun, menunggu
-            persetujuan admin');
-        }
-
-        public function logout(Request $request)
-    {   
+    /**
+     * Memproses logout user.
+     */
+    public function logout(Request $request)
+    {
         Auth::logout();
- 
         $request->session()->invalidate();
- 
         $request->session()->regenerateToken();
- 
-        return redirect('/');
+        return redirect()->route('login');
+    }
 }
-}
+

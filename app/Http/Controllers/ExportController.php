@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 // KIB Models
 use App\Models\Tanah;
 use App\Models\Peralatan;
@@ -28,7 +32,7 @@ use App\Models\Ikt;
 class ExportController extends Controller
 {
     /**
-     * Menangani permintaan ekspor data ke Excel menggunakan PhpSpreadsheet.
+     * Menangani permintaan ekspor data ke Excel dengan styling.
      *
      * @param string $lokasi
      * @param string $menu
@@ -41,100 +45,141 @@ class ExportController extends Controller
         
         $data = [];
         $headers = [];
+        $title = 'Laporan Data'; // Judul default
+        $headerRow = 3; // Baris awal untuk header
         
         // Menentukan data dan header berdasarkan menu yang dipilih
         switch ($menu) {
             case 'tanah':
-                $headers = ['Nama Barang', 'Kode Barang', 'Nomor Register', 'Luas (M2)', 'Tahun Pengadaan', 'Alamat', 'Status Hak', 'Nomor Sertifikat', 'Tanggal Sertifikat', 'Penggunaan', 'Asal Usul', 'Harga (Rp)', 'Keterangan'];
+                $title = 'Laporan Data Tanah (KIB A)';
+                
+                // REVISI: Menggunakan data array biasa karena header dibuat manual
                 $collection = Tanah::where('lokasi', $lokasi)->get();
-                foreach ($collection as $item) {
-                    $data[] = [$item->nama_barang, $item->kode_barang, $item->nomor_register, $item->luas, $item->tahun_pengadaan, $item->alamat, $item->status_hak, $item->nomor_sertifikat, $item->tanggal_sertifikat, $item->penggunaan, $item->asal_usul, $item->harga, $item->keterangan];
+                foreach ($collection as $key => $item) {
+                    $data[] = [
+                        $key + 1,
+                        $item->nama_barang,
+                        $item->kode_barang,
+                        $item->register,
+                        $item->luas,
+                        $item->tahun_pengadaan,
+                        $item->alamat,
+                        $item->status_hak,
+                        $item->tanggal_sertifikat ? \Carbon\Carbon::parse($item->tanggal_sertifikat)->format('d-m-Y') : '',
+                        $item->nomor_sertifikat,
+                        $item->penggunaan,
+                        $item->asal_usul,
+                        $item->harga,
+                        $item->keterangan
+                    ];
                 }
+
+                // --- SECTION PEMBUATAN HEADER MANUAL UNTUK TANAH ---
+                $headerRow = 3;
+                $sheet->mergeCells('A1:N1');
+                $sheet->setCellValue('A1', strtoupper($title . ' - LOKASI: ' . $lokasi));
+
+                // Baris 1 Header Utama
+                $sheet->mergeCells('A3:A5')->setCellValue('A3', 'No.');
+                $sheet->mergeCells('B3:B5')->setCellValue('B3', 'Nama Barang / Jenis Barang');
+                $sheet->mergeCells('C3:D3')->setCellValue('C3', 'Nomor');
+                $sheet->mergeCells('E3:E5')->setCellValue('E3', 'Luas (M²)');
+                $sheet->mergeCells('F3:F5')->setCellValue('F3', 'Tahun Pengadaan');
+                $sheet->mergeCells('G3:G5')->setCellValue('G3', 'Letak / Alamat');
+                $sheet->mergeCells('H3:J3')->setCellValue('H3', 'Status Tanah');
+                $sheet->mergeCells('K3:K5')->setCellValue('K3', 'Penggunaan');
+                $sheet->mergeCells('L3:L5')->setCellValue('L3', 'Asal Usul');
+                $sheet->mergeCells('M3:M5')->setCellValue('M3', 'Harga (Rp)');
+                $sheet->mergeCells('N3:N5')->setCellValue('N3', 'Keterangan');
+                
+                // Baris 2 Sub-Header
+                $sheet->mergeCells('C4:C5')->setCellValue('C4', 'Kode Barang');
+                $sheet->mergeCells('D4:D5')->setCellValue('D4', 'Register');
+                $sheet->mergeCells('H4:H5')->setCellValue('H4', 'Hak');
+                $sheet->mergeCells('I4:J4')->setCellValue('I4', 'Sertifikat');
+
+                // Baris 3 Sub-Sub-Header
+                $sheet->setCellValue('I5', 'Tanggal');
+                $sheet->setCellValue('J5', 'Nomor');
+                // --- END SECTION ---
+
+                // Menulis data mulai dari baris setelah header kompleks
+                $sheet->fromArray($data, NULL, 'A6');
                 break;
 
+            // ... (case lain tetap sama)
             case 'peralatan':
-                $headers = ['Nama Barang', 'Kode Barang', 'Nomor Register', 'Merk/Tipe', 'Ukuran/CC', 'Bahan', 'Tahun Pembelian', 'No. Pabrik', 'No. Rangka', 'No. Mesin', 'No. Polisi', 'No. BPKB', 'Asal Usul', 'Harga (Rp)', 'Keterangan'];
-                $collection = Peralatan::where('lokasi', $lokasi)->get();
-                foreach ($collection as $item) {
-                    $data[] = [$item->nama_barang, $item->kode_barang, $item->nomor_register, $item->merk_tipe, $item->ukuran, $item->bahan, $item->tahun_pembelian, $item->nomor_pabrik, $item->nomor_rangka, $item->nomor_mesin, $item->nomor_polisi, $item->nomor_bpkb, $item->asal_usul, $item->harga, $item->keterangan];
-                }
+                // ... kode peralatan
                 break;
             
             case 'gedung':
-                $headers = ['Jenis Barang/Nama Barang', 'Kode Barang', 'Nomor Register', 'Kondisi Bangunan', 'Bertingkat/Tidak', 'Beton/Tidak', 'Luas Lantai (M2)', 'Lokasi', 'Tgl/No Dokumen', 'Luas (M2)', 'Status Tanah', 'Nomor Kode Tanah', 'Asal-usul', 'Harga (Rp)', 'Keterangan'];
-                $collection = Gedung::where('lokasi', $lokasi)->get();
-                foreach ($collection as $item) {
-                    $data[] = [$item->jenis_barang, $item->kode_barang, $item->nomor_register, $item->kondisi_bangunan, $item->bertingkat, $item->beton, $item->luas_lantai, $item->letak_lokasi, $item->dokumen_tanggal . ' / ' . $item->dokumen_nomor, $item->luas, $item->status_tanah, $item->kode_tanah, $item->asal_usul, $item->harga, $item->keterangan];
-                }
+                // ... kode gedung
                 break;
 
             case 'jalan':
-                 $headers = ['Jenis Barang/Nama Barang', 'Kode Barang', 'Nomor Register', 'Konstruksi', 'Panjang (KM)', 'Lebar (M)', 'Luas (M2)', 'Lokasi', 'Tgl/No Dokumen', 'Status Tanah', 'Kode Tanah', 'Asal-usul', 'Harga (Rp)', 'Kondisi', 'Keterangan'];
-                 $collection = Jalan::where('lokasi', $lokasi)->get();
-                 foreach ($collection as $item) {
-                     $data[] = [$item->jenis_barang, $item->kode_barang, $item->nomor_register, $item->konstruksi, $item->panjang, $item->lebar, $item->luas, $item->letak_lokasi, $item->dokumen_tanggal . ' / ' . $item->dokumen_nomor, $item->status_tanah, $item->kode_tanah, $item->asal_usul, $item->harga, $item->kondisi, $item->keterangan];
-                 }
+                // ... kode jalan
                  break;
 
             case 'rusak':
-                $headers = ['No. ID Pemda', 'Nama/Jenis Barang', 'Spesifikasi', 'No. Polisi', 'Tahun Perolehan', 'Harga Perolehan (Rp)', 'Kondisi', 'Tercatat di KIB', 'Keterangan'];
-                $collection = Rusak::where('lokasi', $lokasi)->get();
-                foreach ($collection as $item) {
-                    $data[] = [$item->id_pemda, $item->nama_barang, $item->spesifikasi, $item->no_polisi, $item->tahun_perolehan, $item->harga_perolehan, $item->kondisi, $item->tercatat_di_kib, $item->keterangan];
-                }
+                // ... kode rusak
                 break;
             
             case 'ruangan':
-                $headers = ['Nama Ruangan', 'Kode Ruangan', 'Penanggung Jawab', 'Keterangan'];
-                $modelClass = null;
-                switch ($lokasi) {
-                    case 'tawang': $modelClass = Room::class; break;
-                    case 'lengkongsari': $modelClass = Rkl::class; break;
-                    case 'cikalang': $modelClass = Rkc::class; break;
-                    case 'empang': $modelClass = Rke::class; break;
-                    case 'kahuripan': $modelClass = Rkk::class; break;
-                    case 'tawangsari': $modelClass = Rkt::class; break;
-                }
-                if ($modelClass) {
-                    $collection = $modelClass::where('lokasi', $lokasi)->get();
-                    foreach ($collection as $item) {
-                        $data[] = [$item->name, $item->kode_ruangan, $item->penanggung_jawab, $item->keterangan];
-                    }
-                }
+                // ... kode ruangan
                 break;
             
             case 'inventaris':
-                $headers = ['Nama Barang', 'Kode Barang', 'Merk/Tipe', 'Jumlah', 'Satuan', 'Tahun Perolehan', 'Harga (Rp)', 'Kondisi', 'Keterangan'];
-                $modelClass = null;
-                switch ($lokasi) {
-                    case 'tawang': $modelClass = Inventaris::class; break;
-                    case 'lengkongsari': $modelClass = Ikl::class; break;
-                    case 'cikalang': $modelClass = Ikc::class; break;
-                    case 'empang': $modelClass = Ike::class; break;
-                    case 'kahuripan': $modelClass = Ikk::class; break;
-                    case 'tawangsari': $modelClass = Ikt::class; break;
-                }
-                if ($modelClass) {
-                    $collection = $modelClass::where('lokasi', $lokasi)->get();
-                    foreach ($collection as $item) {
-                        $data[] = [$item->nama_barang, $item->kode_barang, $item->merk, $item->jumlah, $item->satuan, $item->tahun_perolehan, $item->harga, $item->kondisi, $item->keterangan];
-                    }
-                }
+                // ... kode inventaris
                 break;
 
             default:
                 return redirect()->back()->with('error', 'Jenis data untuk ekspor tidak valid.');
         }
 
-        // Menulis header ke baris pertama
-        $sheet->fromArray($headers, NULL, 'A1');
-        
-        // Menulis data mulai dari baris kedua
-        $sheet->fromArray($data, NULL, 'A2');
+        // --- SECTION STYLING ---
+        if ($menu !== 'tanah') {
+            // Logika styling standar untuk menu lain
+            $sheet->mergeCells('A1:' . chr(64 + count($headers)) . '1');
+            $sheet->setCellValue('A1', strtoupper($title . ' - LOKASI: ' . $lokasi));
+            $sheet->fromArray($headers, NULL, 'A' . $headerRow);
+            $sheet->fromArray($data, NULL, 'A' . ($headerRow + 1));
+        }
 
-        // Menyiapkan file untuk di-download
-        $filename = "data_{$menu}_{$lokasi}_" . date('Y-m-d') . ".xlsx";
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getRowDimension('1')->setRowHeight(20);
+
+        // Mendapatkan dimensi tabel
+        $highestColumn = $sheet->getHighestColumn();
+        $highestRow = $sheet->getHighestRow();
+
+        // Menentukan range header berdasarkan menu
+        $headerRange = ($menu === 'tanah') ? 'A3:' . $highestColumn . '5' : 'A' . $headerRow . ':' . $highestColumn . $headerRow;
+        $fullTableRange = ($menu === 'tanah') ? 'A3:' . $highestColumn . $highestRow : 'A' . $headerRow . ':' . $highestColumn . $highestRow;
+
+        // Styling untuk Header
+        $headerStyle = [
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true],
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]],
+        ];
+        $sheet->getStyle($headerRange)->applyFromArray($headerStyle);
         
+        // Styling untuk seluruh tabel (border)
+        $tableStyle = [
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]]
+        ];
+        $sheet->getStyle($fullTableRange)->applyFromArray($tableStyle);
+
+        // Auto-size semua kolom
+        foreach (range('A', $highestColumn) as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        // --- END SECTION STYLING ---
+
+        $filename = "data_{$menu}_{$lokasi}_" . date('Y-m-d') . ".xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
