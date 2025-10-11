@@ -13,23 +13,24 @@ return new class extends Migration
     {
         Schema::create('gedungs', function (Blueprint $table) {
             $table->id();
+            $table->string('lokasi');
             $table->string('jenis_barang');
             $table->string('kode_barang')->nullable();
-            $table->string('nomor_register')->nullable();
-            $table->string('kondisi')->nullable(); // B, KB, RB
-            $table->string('bertingkat')->nullable(); // Bertingkat, Tidak
-            $table->string('beton')->nullable(); // Beton, Tidak
-            $table->decimal('luas_lantai', 10, 2)->nullable();
-            $table->text('alamat')->nullable();
+            $table->string('nomor_register');
+            // REVISI: Mengubah string menjadi enum
+            $table->enum('kondisi_bangunan', ['Baik', 'Kurang Baik', 'Rusak Berat']);
+            $table->enum('bertingkat', ['Bertingkat', 'Tidak']);
+            $table->enum('beton', ['Beton', 'Tidak']);
+            $table->integer('luas_lantai');
+            $table->string('letak_lokasi');
             $table->date('dokumen_tanggal')->nullable();
             $table->string('dokumen_nomor')->nullable();
-            $table->decimal('luas_tanah', 10, 2)->nullable();
-            $table->string('status_tanah')->nullable();
+            $table->integer('luas');
+            $table->string('status_tanah');
             $table->string('kode_tanah')->nullable();
-            $table->string('asal_usul')->nullable();
-            $table->decimal('harga', 15, 2)->nullable();
+            $table->string('asal_usul');
+            $table->decimal('harga', 15, 2);
             $table->text('keterangan')->nullable();
-            $table->string('lokasi'); // Kolom untuk memfilter berdasarkan lokasi
             $table->timestamps();
         });
     }
@@ -42,3 +43,4 @@ return new class extends Migration
         Schema::dropIfExists('gedungs');
     }
 };
+

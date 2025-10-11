@@ -14,25 +14,21 @@ class PeralatanController extends Controller
     {
         $search = $request->query('search');
 
-        // Query dimulai dengan memfilter berdasarkan parameter {lokasi} dari URL.
         $query = Peralatan::where('lokasi', $lokasi);
 
         if ($search) {
             $query->where(function($q) use ($search) {
+                // REVISI: Disesuaikan dengan nama kolom di database
                 $q->where('nama_barang', 'LIKE', "%{$search}%")
                   ->orWhere('kode_barang', 'LIKE', "%{$search}%")
-                  ->orWhere('nomor_registrasi', 'LIKE', "%{$search}%")
-                  ->orWhere('merk', 'LIKE', "%{$search}%")
-                  ->orWhere('tipe', 'LIKE', "%{$search}%")
+                  ->orWhere('nomor_register', 'LIKE', "%{$search}%") // Menggunakan nomor_register
+                  ->orWhere('merk_tipe', 'LIKE', "%{$search}%")     // Menggunakan merk_tipe
                   ->orWhere('bahan', 'LIKE', "%{$search}%");
             });
         }
         
         $dataPeralatan = $query->latest()->paginate(10);
         
-        // Path view dibuat dinamis menggunakan variabel $lokasi.
-        // Pastikan Anda memiliki folder view untuk setiap lokasi 
-        // (e.g., resources/views/pages/tawang/peralatan, etc.)
         return view("pages.{$lokasi}.peralatan.index", compact('dataPeralatan', 'lokasi', 'search'));
     }
 
@@ -49,31 +45,30 @@ class PeralatanController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
+        // REVISI: Validasi disesuaikan dengan nama kolom yang benar
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
-            'nomor_registrasi' => 'nullable|string|max:255',
-            'merk' => 'nullable|string|max:255',
-            'tipe' => 'nullable|string|max:255',
+            'nomor_register' => 'required|string|max:255',
+            'merk_tipe' => 'nullable|string|max:255',
             'ukuran' => 'nullable|string|max:255',
             'bahan' => 'nullable|string|max:255',
-            'tahun_pembelian' => 'nullable|numeric',
+            'tahun_pembelian' => 'required|digits:4',
+            'nomor_pabrik' => 'nullable|string|max:255',
             'nomor_rangka' => 'nullable|string|max:255',
             'nomor_mesin' => 'nullable|string|max:255',
             'nomor_polisi' => 'nullable|string|max:255',
             'nomor_bpkb' => 'nullable|string|max:255',
-            'asal_usul' => 'nullable|string|max:255',
-            'harga' => 'nullable|numeric',
+            'asal_usul' => 'required|string|max:255',
+            'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
         ]);
         
         $dataToStore = $request->all();
-        // Kolom 'lokasi' diisi secara otomatis dari parameter URL.
         $dataToStore['lokasi'] = $lokasi;
         
         Peralatan::create($dataToStore);
 
-        // Redirect ke halaman index dari lokasi yang sesuai.
         return redirect()->route('lokasi.peralatan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data peralatan berhasil ditambahkan.');
     }
@@ -83,7 +78,6 @@ class PeralatanController extends Controller
      */
     public function edit($lokasi, Peralatan $peralatan)
     {
-        // Pengaman: Pastikan data yang diedit sesuai dengan lokasinya.
         if ($peralatan->lokasi !== $lokasi) {
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
@@ -99,21 +93,22 @@ class PeralatanController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
+        // REVISI: Validasi disesuaikan dengan nama kolom yang benar
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
-            'nomor_registrasi' => 'nullable|string|max:255',
-            'merk' => 'nullable|string|max:255',
-            'tipe' => 'nullable|string|max:255',
+            'nomor_register' => 'required|string|max:255',
+            'merk_tipe' => 'nullable|string|max:255',
             'ukuran' => 'nullable|string|max:255',
             'bahan' => 'nullable|string|max:255',
-            'tahun_pembelian' => 'nullable|numeric',
+            'tahun_pembelian' => 'required|digits:4',
+            'nomor_pabrik' => 'nullable|string|max:255',
             'nomor_rangka' => 'nullable|string|max:255',
             'nomor_mesin' => 'nullable|string|max:255',
             'nomor_polisi' => 'nullable|string|max:255',
             'nomor_bpkb' => 'nullable|string|max:255',
-            'asal_usul' => 'nullable|string|max:255',
-            'harga' => 'nullable|numeric',
+            'asal_usul' => 'required|string|max:255',
+            'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
         ]);
         
@@ -147,4 +142,3 @@ class PeralatanController extends Controller
         return view("pages.{$lokasi}.peralatan.print", compact('dataPeralatan', 'lokasi'));
     }
 }
-

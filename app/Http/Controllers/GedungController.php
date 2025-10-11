@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Gedung; // Pastikan Anda membuat model Gedung
+use App\Models\Gedung;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class GedungController extends Controller
 {
@@ -13,22 +14,17 @@ class GedungController extends Controller
     public function index(Request $request, $lokasi)
     {
         $search = $request->query('search');
-
-        // Query dimulai dengan memfilter berdasarkan parameter {lokasi} dari URL.
         $query = Gedung::where('lokasi', $lokasi);
 
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('jenis_barang', 'LIKE', "%{$search}%")
                   ->orWhere('kode_barang', 'LIKE', "%{$search}%")
-                  ->orWhere('nomor_register', 'LIKE', "%{$search}%")
-                  ->orWhere('alamat', 'LIKE', "%{$search}%");
+                  ->orWhere('letak_lokasi', 'LIKE', "%{$search}%");
             });
         }
         
         $dataGedung = $query->latest()->paginate(10);
-        
-        // Path view dibuat dinamis menggunakan variabel $lokasi.
         return view("pages.{$lokasi}.gedung.index", compact('dataGedung', 'lokasi', 'search'));
     }
 
@@ -45,22 +41,23 @@ class GedungController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
+        // REVISI: Validasi dilengkapi untuk semua kolom
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'nullable|string|max:255',
-            'kondisi' => 'nullable|string|max:255',
-            'bertingkat' => 'nullable|string|max:255',
-            'beton' => 'nullable|string|max:255',
-            'luas_lantai' => 'nullable|numeric',
-            'alamat' => 'nullable|string',
+            'nomor_register' => 'required|string|max:255',
+            'kondisi_bangunan' => ['required', Rule::in(['Baik', 'Kurang Baik', 'Rusak Berat'])],
+            'bertingkat' => ['required', Rule::in(['Bertingkat', 'Tidak'])],
+            'beton' => ['required', Rule::in(['Beton', 'Tidak'])],
+            'luas_lantai' => 'required|integer',
+            'letak_lokasi' => 'required|string',
             'dokumen_tanggal' => 'nullable|date',
             'dokumen_nomor' => 'nullable|string|max:255',
-            'luas_tanah' => 'nullable|numeric',
-            'status_tanah' => 'nullable|string|max:255',
+            'luas' => 'required|integer',
+            'status_tanah' => 'required|string',
             'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'nullable|string|max:255',
-            'harga' => 'nullable|numeric',
+            'asal_usul' => 'required|string',
+            'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
         ]);
         
@@ -78,9 +75,7 @@ class GedungController extends Controller
      */
     public function edit($lokasi, Gedung $gedung)
     {
-        if ($gedung->lokasi !== $lokasi) {
-            abort(404, 'Data tidak ditemukan di lokasi ini.');
-        }
+        if ($gedung->lokasi !== $lokasi) { abort(404); }
         return view("pages.{$lokasi}.gedung.edit", compact('gedung', 'lokasi'));
     }
 
@@ -89,26 +84,25 @@ class GedungController extends Controller
      */
     public function update(Request $request, $lokasi, Gedung $gedung)
     {
-        if ($gedung->lokasi !== $lokasi) {
-            abort(404, 'Data tidak ditemukan di lokasi ini.');
-        }
+        if ($gedung->lokasi !== $lokasi) { abort(404); }
 
+        // REVISI: Validasi dilengkapi untuk semua kolom
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'nullable|string|max:255',
-            'kondisi' => 'nullable|string|max:255',
-            'bertingkat' => 'nullable|string|max:255',
-            'beton' => 'nullable|string|max:255',
-            'luas_lantai' => 'nullable|numeric',
-            'alamat' => 'nullable|string',
+            'nomor_register' => 'required|string|max:255',
+            'kondisi_bangunan' => ['required', Rule::in(['Baik', 'Kurang Baik', 'Rusak Berat'])],
+            'bertingkat' => ['required', Rule::in(['Bertingkat', 'Tidak'])],
+            'beton' => ['required', Rule::in(['Beton', 'Tidak'])],
+            'luas_lantai' => 'required|integer',
+            'letak_lokasi' => 'required|string',
             'dokumen_tanggal' => 'nullable|date',
             'dokumen_nomor' => 'nullable|string|max:255',
-            'luas_tanah' => 'nullable|numeric',
-            'status_tanah' => 'nullable|string|max:255',
+            'luas' => 'required|integer',
+            'status_tanah' => 'required|string',
             'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'nullable|string|max:255',
-            'harga' => 'nullable|numeric',
+            'asal_usul' => 'required|string',
+            'harga' => 'required|numeric',
             'keterangan' => 'nullable|string',
         ]);
         
@@ -123,18 +117,14 @@ class GedungController extends Controller
      */
     public function destroy($lokasi, Gedung $gedung)
     {
-        if ($gedung->lokasi !== $lokasi) {
-            abort(404, 'Data tidak ditemukan di lokasi ini.');
-        }
-        
+        if ($gedung->lokasi !== $lokasi) { abort(404); }
         $gedung->delete();
-
         return redirect()->route('lokasi.gedung.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data gedung & bangunan berhasil dihapus.');
     }
 
     /**
-     * Menghasilkan halaman untuk dicetak (print).
+     * Menghasilkan halaman untuk dicetak.
      */
     public function print($lokasi)
     {
@@ -142,3 +132,4 @@ class GedungController extends Controller
         return view("pages.{$lokasi}.gedung.print", compact('dataGedung', 'lokasi'));
     }
 }
+

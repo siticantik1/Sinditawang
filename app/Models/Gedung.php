@@ -10,27 +10,45 @@ class Gedung extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * Nama tabel yang terhubung dengan model.
+     *
+     * @var string
+     */
+    protected $table = 'gedungs';
+
+    /**
+     * Atribut yang dapat diisi secara massal.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'lokasi',
         'jenis_barang',
         'kode_barang',
         'nomor_register',
-        'kondisi',
+        'kondisi_bangunan',
         'bertingkat',
         'beton',
         'luas_lantai',
-        'alamat',
+        'letak_lokasi',
         'dokumen_tanggal',
         'dokumen_nomor',
-        'luas_tanah',
+        'luas',
         'status_tanah',
         'kode_tanah',
         'asal_usul',
         'harga',
         'keterangan',
-        'lokasi',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'dokumen_tanggal' => 'date',
+        'harga' => 'decimal:2',
     ];
 }
+

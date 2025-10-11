@@ -27,7 +27,7 @@
         <div class="text-center mb-4">
             <h5 class="mb-0">KARTU INVENTARIS BARANG (KIB) A</h5>
             <h5 class="mb-0">TANAH</h5>
-            <h6>SKPD: KECAMATAN {{ strtoupper($lokasi) }}</h6>
+            <h6>SKPD: Kelurahan {{ strtoupper($lokasi) }}</h6>
         </div>
 
         <table class="table table-bordered table-sm" style="font-size: 10px;">

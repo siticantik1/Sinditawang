@@ -17,12 +17,12 @@ class Peralatan extends Model
     protected $fillable = [
         'nama_barang',
         'kode_barang',
-        'nomor_registrasi',
-        'merk',
-        'tipe',
+        'nomor_register', // Disesuaikan dari nomor_registrasi
+        'merk_tipe',      // Menggabungkan merk dan tipe
         'ukuran',
         'bahan',
         'tahun_pembelian',
+        'nomor_pabrik',
         'nomor_rangka',
         'nomor_mesin',
         'nomor_polisi',
@@ -30,6 +30,7 @@ class Peralatan extends Model
         'asal_usul',
         'harga',
         'keterangan',
-        'lokasi', // Jangan lupa tambahkan 'lokasi'
+        'lokasi',
     ];
 }
+

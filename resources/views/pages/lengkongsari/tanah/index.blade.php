@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Tanah - Kel.Lengkongsari')
+
 @section('content')
 <div class="card shadow mb-4">
     {{-- Card Header - Aksi dan Pencarian --}}
