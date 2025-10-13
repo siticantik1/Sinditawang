@@ -1,27 +1,41 @@
 @php
+    $user = Auth::user();
+    $roleId = $user->role_id;
+
     // Mengambil semua data ruangan sekali saja untuk efisiensi, dikelompokkan berdasarkan lokasi
     $allRoomsByLocation = \App\Models\Room::orderBy('name')->get()->groupBy('lokasi');
 
     // Menyiapkan data untuk Tawang secara spesifik
     $tawangRooms = $allRoomsByLocation['tawang'] ?? collect();
 
-    // Menyiapkan data untuk semua kelurahan
-    $allKelurahan = [
+    // Daftar lengkap semua kelurahan
+    $fullKelurahanList = [
         ['name' => 'Lengkongsari', 'slug' => 'lengkongsari'],
         ['name' => 'Cikalang', 'slug' => 'cikalang'],
         ['name' => 'Empang', 'slug' => 'empang'],
         ['name' => 'Kahuripan', 'slug' => 'kahuripan'],
         ['name' => 'Tawangsari', 'slug' => 'tawangsari'],
     ];
+
+    // Menentukan kelurahan mana yang akan ditampilkan berdasarkan peran pengguna
+    $visibleKelurahan = [];
+    if ($roleId == 1 || $roleId == 2) { // Admin & Kecamatan melihat semua kelurahan
+        $visibleKelurahan = $fullKelurahanList;
+    } elseif ($roleId == 3) { // User hanya melihat kelurahannya sendiri
+        foreach ($fullKelurahanList as $kelurahan) {
+            if ('Kelurahan ' . $kelurahan['name'] === $user->name) {
+                $visibleKelurahan[] = $kelurahan;
+                break;
+            }
+        }
+    }
 @endphp
 
 <ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    {{-- REVISI: Menambahkan logo di samping brand text --}}
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
         <div class="sidebar-brand-icon">
-            {{-- Pastikan logo ada di folder public/img/tsk.png --}}
             <img src="{{ asset('img/tsk.png') }}" alt="Logo Pemkot Tasikmalaya" style="height: 40px;">
         </div>
         <div class="sidebar-brand-text mx-2">SINDI</div>
@@ -38,9 +52,8 @@
         </a>
     </li>
 
-    <!--============================================
-    =            MENU KECAMATAN TAWANG             =
-    =============================================-->
+    {{-- Tampilkan Menu Kecamatan Tawang untuk Admin, Kecamatan, atau User Tawang --}}
+    @if ($roleId == 1 || $roleId == 2 || $user->name == 'Kecamatan Tawang')
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
         Kecamatan Tawang
@@ -86,13 +99,11 @@
             </div>
         </div>
     </li>
-    <!--====  End of MENU KECAMATAN TAWANG  ====-->
+    @endif
 
 
-    <!--========================================
-    =            LOOP MENU KELURAHAN             =
-    =========================================-->
-    @foreach ($allKelurahan as $kelurahan)
+    {{-- Loop melalui kelurahan yang boleh diakses oleh pengguna --}}
+    @foreach ($visibleKelurahan as $kelurahan)
         <hr class="sidebar-divider">
         <div class="sidebar-heading">
             Kelurahan {{ $kelurahan['name'] }}
@@ -142,31 +153,29 @@
             </div>
         </li>
     @endforeach
-    <!--====  End of LOOP MENU KELURAHAN  ====-->
 
-    <!-- Divider -->
+    {{-- Tampilkan Menu Laporan & Pengaturan untuk Admin dan Kecamatan --}}
+    @if ($roleId == 1 || $roleId == 2)
     <hr class="sidebar-divider">
-
-    <!-- Heading -->
     <div class="sidebar-heading">
         Laporan & Pengaturan
     </div>
-
-    <!-- Nav Item - Laporan -->
     <li class="nav-item">
         <a class="nav-link" href="#">
             <i class="fas fa-fw fa-file-alt"></i>
             <span>Laporan Keseluruhan</span>
         </a>
     </li>
-
-    <!-- Nav Item - Account -->
+    {{-- Tampilkan Menu Account hanya untuk Admin --}}
+    @if ($roleId == 1)
     <li class="nav-item">
         <a class="nav-link" href="#">
             <i class="fas fa-fw fa-user-circle"></i>
             <span>Account</span>
         </a>
     </li>
+    @endif
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
