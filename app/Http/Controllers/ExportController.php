@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Font;
@@ -14,20 +15,10 @@ use App\Models\Peralatan;
 use App\Models\Gedung;
 use App\Models\Jalan;
 use App\Models\Rusak;
-// Ruangan Models
+// Ruangan & Inventaris Models
 use App\Models\Room;
-use App\Models\Rkl;
-use App\Models\Rkc;
-use App\Models\Rke;
-use App\Models\Rkk;
-use App\Models\Rkt;
-// Inventaris Models
 use App\Models\Inventaris;
-use App\Models\Ikl;
-use App\Models\Ikc;
-use App\Models\Ike;
-use App\Models\Ikk;
-use App\Models\Ikt;
+
 
 class ExportController extends Controller
 {
@@ -38,13 +29,12 @@ class ExportController extends Controller
      * @param string $menu
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function export($lokasi, $menu)
+    public function export(Request $request, $lokasi, $menu)
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         
         $data = [];
-        $headers = [];
         $title = 'Laporan Data';
         $headerRowStart = 3;
         
@@ -174,44 +164,56 @@ class ExportController extends Controller
             
             case 'ruangan':
                 $title = 'Laporan Data Ruangan';
-                $headers = ['No.', 'Nama Ruangan', 'Kode Ruangan', 'Penanggung Jawab', 'Keterangan'];
-                $modelClass = null;
-                switch ($lokasi) {
-                    case 'tawang': $modelClass = Room::class; break;
-                    case 'lengkongsari': $modelClass = Rkl::class; break;
-                    case 'cikalang': $modelClass = Rkc::class; break;
-                    case 'empang': $modelClass = Rke::class; break;
-                    case 'kahuripan': $modelClass = Rkk::class; break;
-                    case 'tawangsari': $modelClass = Rkt::class; break;
-                }
-                if ($modelClass) {
-                    $collection = $modelClass::where('lokasi', $lokasi)->get();
-                    foreach ($collection as $key => $item) {
-                        $data[] = [$key + 1, $item->name, $item->kode_ruangan, $item->penanggung_jawab, $item->keterangan];
-                    }
+                $headers = ['No.', 'Nama Ruangan', 'Kode Ruangan'];
+                $collection = Room::where('lokasi', $lokasi)->get();
+                foreach ($collection as $key => $item) {
+                    $data[] = [$key + 1, $item->name, $item->kode_ruangan];
                 }
                 break;
             
             case 'inventaris':
-                $title = 'Laporan Data Inventaris Ruangan';
-                $headers = ['No.', 'Nama Barang', 'Kode Barang', 'Merk/Tipe', 'Jumlah', 'Satuan', 'Tahun Perolehan', 'Harga (Rp)', 'Kondisi', 'Keterangan'];
-                $modelClass = null;
-                switch ($lokasi) {
-                    case 'tawang': $modelClass = Inventaris::class; break;
-                    case 'lengkongsari': $modelClass = Ikl::class; break;
-                    case 'cikalang': $modelClass = Ikc::class; break;
-                    case 'empang': $modelClass = Ike::class; break;
-                    case 'kahuripan': $modelClass = Ikk::class; break;
-                    case 'tawangsari': $modelClass = Ikt::class; break;
+                $roomId = $request->query('room_id');
+                if (!$roomId) {
+                    return redirect()->back()->with('error', 'Ruangan tidak ditemukan untuk ekspor.');
                 }
-                if ($modelClass) {
-                    // Diasumsikan model inventaris memiliki relasi ke ruangan, dan ruangan punya lokasi
-                    // Ini adalah contoh query, mungkin perlu disesuaikan dengan struktur relasi Anda
-                    $collection = $modelClass::get(); // Ini mungkin perlu query yang lebih kompleks
-                    foreach ($collection as $key => $item) {
-                        $data[] = [$key + 1, $item->nama_barang, $item->kode_barang, $item->merk, $item->jumlah, $item->satuan, $item->tahun_perolehan, $item->harga, $item->kondisi, $item->keterangan];
-                    }
+                $room = Room::findOrFail($roomId);
+                $title = 'Kartu Inventaris Ruangan: ' . $room->name;
+
+                $collection = Inventaris::where('room_id', $roomId)->get();
+                foreach ($collection as $key => $item) {
+                    $data[] = [
+                        $key + 1,
+                        $item->nama_barang,
+                        $item->merk_model,
+                        $item->bahan,
+                        $item->tahun_pembelian,
+                        $item->kode_barang,
+                        $item->jumlah,
+                        $item->harga_perolehan,
+                        $item->kondisi == 'B' ? 'B' : '',
+                        $item->kondisi == 'KB' ? 'KB' : '',
+                        $item->kondisi == 'RB' ? 'RB' : '',
+                        $item->keterangan
+                    ];
                 }
+                
+                $sheet->mergeCells('A1:L1')->setCellValue('A1', strtoupper($title . ' - LOKASI: ' . $lokasi));
+                $sheet->mergeCells('A3:A4')->setCellValue('A3', 'No Urut');
+                $sheet->mergeCells('B3:B4')->setCellValue('B3', 'Nama Barang/ Jenis Barang');
+                $sheet->mergeCells('C3:C4')->setCellValue('C3', 'Merk/ Model');
+                $sheet->mergeCells('D3:D4')->setCellValue('D3', 'Bahan');
+                $sheet->mergeCells('E3:E4')->setCellValue('E3', 'Tahun Pembelian');
+                $sheet->mergeCells('F3:F4')->setCellValue('F3', 'No. Kode Barang');
+                $sheet->mergeCells('G3:G4')->setCellValue('G3', 'Jumlah Barang');
+                $sheet->mergeCells('H3:H4')->setCellValue('H3', 'Harga Beli/ Perolehan (Rp)');
+                $sheet->mergeCells('I3:K3')->setCellValue('I3', 'Keadaan Barang');
+                $sheet->mergeCells('L3:L4')->setCellValue('L3', 'Keterangan');
+
+                $sheet->setCellValue('I4', 'Baik (B)');
+                $sheet->setCellValue('J4', 'Kurang Baik (KB)');
+                $sheet->setCellValue('K4', 'Rusak Berat (RB)');
+                
+                $sheet->fromArray($data, NULL, 'A5');
                 break;
 
             default:
@@ -219,7 +221,7 @@ class ExportController extends Controller
         }
 
         // --- SECTION STYLING ---
-        $isComplexHeader = in_array($menu, ['tanah', 'peralatan', 'gedung', 'jalan']);
+        $isComplexHeader = in_array($menu, ['tanah', 'peralatan', 'gedung', 'jalan', 'inventaris']);
 
         if (!$isComplexHeader) {
             if (empty($headers)) {
@@ -240,23 +242,16 @@ class ExportController extends Controller
         
         $headerRange = 'A3:'.$highestColumn.'3'; // Default
         if ($menu === 'tanah') $headerRange = 'A3:'.$highestColumn.'5';
-        if ($menu === 'peralatan') $headerRange = 'A3:'.$highestColumn.'4';
-        if ($menu === 'gedung') $headerRange = 'A3:'.$highestColumn.'4';
-        if ($menu === 'jalan') $headerRange = 'A3:'.$highestColumn.'4';
+        if ($menu === 'peralatan' || $menu === 'gedung' || $menu === 'jalan' || $menu === 'inventaris') {
+            $headerRange = 'A3:'.$highestColumn.'4';
+        }
 
         $fullTableRange = 'A3:' . $highestColumn . $highestRow;
         
-        $headerStyle = [
-            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']],
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true],
-            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]],
-        ];
+        $headerStyle = [ 'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']], 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4F81BD']], 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true], 'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]], ];
         $sheet->getStyle($headerRange)->applyFromArray($headerStyle);
         
-        $tableStyle = [
-            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]]
-        ];
+        $tableStyle = [ 'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '000000']]] ];
         $sheet->getStyle($fullTableRange)->applyFromArray($tableStyle);
 
         foreach (range('A', $highestColumn) as $columnID) {

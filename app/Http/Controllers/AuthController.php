@@ -14,7 +14,6 @@ class AuthController extends Controller
      */
     public function login()
     {
-        // REVISI: Path view disesuaikan dengan struktur folder Anda.
         return view('pages.auth.login');
     }
 
@@ -23,7 +22,6 @@ class AuthController extends Controller
      */
     public function registerView()
     {
-        // REVISI: Path view disesuaikan dengan struktur folder Anda.
         return view('pages.auth.register');
     }
 
@@ -91,13 +89,13 @@ class AuthController extends Controller
                 return redirect()->intended('dashboard');
             }
 
-            // Jika user adalah user lokasi, arahkan ke halaman aset wilayahnya
+            // Jika user adalah user lokasi, arahkan ke halaman aset wilayahnya (contoh ke data tanah)
             if (array_key_exists($user->name, $locationMap)) {
                 $lokasi = $locationMap[$user->name];
                 return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi]);
             }
 
-            // Pengalihan default jika tidak ada peran khusus
+            // Pengalihan default jika tidak ada peran khusus (misal user baru yang di-approve)
             return redirect()->intended('dashboard');
         }
 

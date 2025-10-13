@@ -4,101 +4,110 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class RoomController extends Controller
 {
     /**
-     * Menampilkan daftar ruangan HANYA untuk Tawang.
+     * Menampilkan daftar data ruangan berdasarkan lokasi dan pencarian.
      */
-    public function index()
+    public function index(Request $request, $lokasi)
     {
-        $rooms = Room::where('lokasi', 'tawang')->orderBy('name')->get();
-        return view('pages.room.index', compact('rooms'));
+        $search = $request->query('search');
+        $query = Room::where('lokasi', $lokasi);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('kode_ruangan', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $dataRuangan = $query->latest()->paginate(10);
+        
+        return view("pages.{$lokasi}.room.index", compact('dataRuangan', 'lokasi', 'search'));
     }
 
     /**
-     * Menampilkan form untuk membuat ruangan baru untuk Tawang.
+     * Menampilkan form untuk membuat data ruangan baru.
      */
-    public function create()
+    public function create($lokasi)
     {
-        return view('pages.room.create');
+        return view("pages.{$lokasi}.room.create", compact('lokasi'));
     }
 
     /**
-     * Menyimpan ruangan baru ke database.
+     * Menyimpan data ruangan yang baru dibuat ke database.
      */
-    public function store(Request $request)
+    public function store(Request $request, $lokasi)
     {
-        // ======================================================
-        // PERBAIKAN: Validasi disesuaikan menjadi 'kode_ruangan' agar cocok dengan Model
-        // ======================================================
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'kode_ruangan' => 'required|string|max:50|unique:rooms,kode_ruangan',
+            'kode_ruangan' => 'nullable|string|max:255',
         ]);
+        
+        $dataToStore = $request->all();
+        $dataToStore['lokasi'] = $lokasi;
+        
+        Room::create($dataToStore);
 
-        // Lokasi diatur otomatis di sini
-        $validatedData['lokasi'] = 'tawang';
-
-        Room::create($validatedData);
-
-        return redirect()->route('tawang.room.index')
-                         ->with('success', 'Ruangan baru berhasil ditambahkan!');
+        return redirect()->route('lokasi.room.index', ['lokasi' => $lokasi])
+                         ->with('success', 'Data ruangan berhasil ditambahkan.');
     }
 
     /**
-     * Menampilkan form untuk mengedit ruangan.
+     * Menampilkan form untuk mengedit data ruangan.
      */
-    public function edit(Room $room)
+    public function edit($lokasi, Room $room)
     {
-        return view('pages.room.edit', compact('room'));
+        // Pengaman: Pastikan data yang diedit sesuai dengan lokasinya.
+        if ($room->lokasi !== $lokasi) {
+            abort(404, 'Data ruangan tidak ditemukan di lokasi ini.');
+        }
+        return view("pages.{$lokasi}.room.edit", compact('room', 'lokasi'));
     }
 
     /**
      * Memperbarui data ruangan di database.
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $lokasi, Room $room)
     {
-        // ======================================================
-        // PERBAIKAN UTAMA: Validasi disesuaikan menjadi 'kode_ruangan' agar cocok dengan Model
-        // ======================================================
-        $validatedData = $request->validate([
+        if ($room->lokasi !== $lokasi) {
+            abort(404, 'Data ruangan tidak ditemukan di lokasi ini.');
+        }
+
+        $request->validate([
             'name' => 'required|string|max:255',
-            'kode_ruangan' => [
-                'required',
-                'string',
-                'max:50',
-                Rule::unique('rooms', 'kode_ruangan')->ignore($room->id),
-            ],
+            'kode_ruangan' => 'nullable|string|max:255',
         ]);
+        
+        $room->update($request->all());
 
-        $room->update($validatedData);
-
-        return redirect()->route('tawang.room.index')
-                         ->with('success', 'Data ruangan berhasil diperbarui!');
+        return redirect()->route('lokasi.room.index', ['lokasi' => $lokasi])
+                         ->with('success', 'Data ruangan berhasil diperbarui.');
     }
 
     /**
      * Menghapus data ruangan dari database.
      */
-    public function destroy(Room $room)
+    public function destroy($lokasi, Room $room)
     {
-        $room->delete();
-        return redirect()->route('tawang.room.index')
-                         ->with('success', 'Ruangan berhasil dihapus.');
-    }
-    
-    /**
-     * Fungsi untuk mencetak PDF ruangan Tawang.
-     */
-    public function pdf()
-    {
-        // Logika untuk membuat PDF bisa ditambahkan di sini
-        $rooms = Room::where('lokasi', 'tawang')->orderBy('name')->get();
-        // Contoh: return PDF::loadView('pages.room.pdf', compact('rooms'))->download('laporan-ruangan-tawang.pdf');
+        if ($room->lokasi !== $lokasi) {
+            abort(404, 'Data ruangan tidak ditemukan di lokasi ini.');
+        }
         
-        return "Halaman PDF untuk Ruangan Tawang";
+        $room->delete();
+
+        return redirect()->route('lokasi.room.index', ['lokasi' => $lokasi])
+                         ->with('success', 'Data ruangan berhasil dihapus.');
+    }
+
+    /**
+     * Menghasilkan halaman untuk dicetak (print).
+     */
+    public function print($lokasi)
+    {
+        $dataRuangan = Room::where('lokasi', $lokasi)->latest()->get();
+        return view("pages.{$lokasi}.room.print", compact('dataRuangan', 'lokasi'));
     }
 }
 
