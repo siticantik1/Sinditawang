@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Jalan; // Pastikan Anda membuat model Jalan
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class JalanController extends Controller
 {
@@ -44,7 +48,6 @@ class JalanController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
-        // REVISI: Validasi disesuaikan dengan skema database
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
@@ -67,7 +70,11 @@ class JalanController extends Controller
         $dataToStore = $request->all();
         $dataToStore['lokasi'] = $lokasi;
         
-        Jalan::create($dataToStore);
+        $jalan = Jalan::create($dataToStore);
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Jalan, Irigasi & Jaringan', $jalan->jenis_barang));
 
         return redirect()->route('lokasi.jalan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data Jalan, Irigasi & Jaringan berhasil ditambahkan.');
@@ -93,7 +100,6 @@ class JalanController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
-        // REVISI: Validasi disesuaikan dengan skema database
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
@@ -115,6 +121,10 @@ class JalanController extends Controller
         
         $jalan->update($request->all());
 
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Jalan, Irigasi & Jaringan', $jalan->jenis_barang));
+
         return redirect()->route('lokasi.jalan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data Jalan, Irigasi & Jaringan berhasil diperbarui.');
     }
@@ -128,7 +138,12 @@ class JalanController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
         
+        $itemName = $jalan->jenis_barang;
         $jalan->delete();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Jalan, Irigasi & Jaringan', $itemName));
 
         return redirect()->route('lokasi.jalan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data Jalan, Irigasi & Jaringan berhasil dihapus.');

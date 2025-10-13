@@ -93,10 +93,6 @@
                                         </button>
                                         <hr>
                                     </form>
-                                    <div class="text-center">
-                                        {{-- Pastikan rute register sudah ada --}}
-                                        <a class="small" href="{{ route('register') }}">Buat Akun Baru!</a>
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             'email' => 'lengkongsari@gmail.com',
             'password' => 'password',
             'status' => 'approved',
-            'role_id' => '2', //=> 'User'
+            'role_id' => '3', //=> 'User'
         ]);
 
         // User untuk Kelurahan Cikalang
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'email' => 'cikalang@gmail.com',
             'password' => 'password',
             'status' => 'approved',
-            'role_id' => '2', //=> 'User'
+            'role_id' => '3', //=> 'User'
         ]);
 
         // User untuk Kelurahan Empang
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
             'email' => 'empang@gmail.com',
             'password' => 'password',
             'status' => 'approved',
-            'role_id' => '2', //=> 'User'
+            'role_id' => '3', //=> 'User'
         ]);
 
         // User untuk Kelurahan Kahuripan
@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
             'email' => 'kahuripan@gmail.com',
             'password' => 'password',
             'status' => 'approved',
-            'role_id' => '2', //=> 'User'
+            'role_id' => '3', //=> 'User'
         ]);
 
         // User untuk Kelurahan Tawangsari
@@ -73,7 +73,7 @@ class UserSeeder extends Seeder
             'email' => 'tawangsari@gmail.com',
             'password' => 'password',
             'status' => 'approved',
-            'role_id' => '2', //=> 'User'
+            'role_id' => '3', //=> 'User'
         ]);
     }
 }

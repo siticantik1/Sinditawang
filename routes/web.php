@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // --- CONTROLLER UTAMA & AUTENTIKASI ---
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController; // Import Controller baru
 
 // --- CONTROLLER DINAMIS (SATU UNTUK SEMUA) ---
 use App\Http\Controllers\TanahController;
@@ -42,6 +43,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // REVISI: Tambahkan rute untuk menandai notifikasi sudah dibaca
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+
     // --- RUTE DINAMIS UNTUK SEMUA MODUL ---
     Route::prefix('{lokasi}')
         ->whereIn('lokasi', ['tawang', 'lengkongsari', 'cikalang', 'empang', 'kahuripan', 'tawangsari'])
@@ -72,7 +76,5 @@ Route::middleware('auth')->group(function () {
             Route::get('rusak/print', [RusakController::class, 'print'])->name('rusak.print');
             Route::resource('rusak', RusakController::class);
         });
-
-    // SEMUA RUTE STATIS LAMA DI BAWAH INI SEKARANG SUDAH TIDAK DIPERLUKAN LAGI
 });
 

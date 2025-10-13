@@ -18,8 +18,13 @@
 <ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
+    {{-- REVISI: Menambahkan logo di samping brand text --}}
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
-        <div class="sidebar-brand-text mx-3">SINDI</div>
+        <div class="sidebar-brand-icon">
+            {{-- Pastikan logo ada di folder public/img/tsk.png --}}
+            <img src="{{ asset('img/tsk.png') }}" alt="Logo Pemkot Tasikmalaya" style="height: 40px;">
+        </div>
+        <div class="sidebar-brand-text mx-2">SINDI</div>
     </a>
 
     <!-- Divider -->
@@ -65,7 +70,6 @@
             </div>
         </div>
     </li>
-    {{-- REVISI: Nama menu diubah --}}
     <li class="nav-item {{ request()->is('tawang/tanah*') || request()->is('tawang/peralatan*') || request()->is('tawang/gedung*') || request()->is('tawang/jalan*') || request()->is('tawang/rusak*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebarang" aria-expanded="true" aria-controls="collapsebarang">
             <i class="fas fa-fw fa-archive"></i>
@@ -74,7 +78,6 @@
         <div id="collapsebarang" class="collapse {{ request()->is('tawang/tanah*') || request()->is('tawang/peralatan*') || request()->is('tawang/gedung*') || request()->is('tawang/jalan*') || request()->is('tawang/rusak*') ? 'show' : '' }}" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Data:</h6>
-                {{-- REVISI: Nama sub-menu diubah --}}
                 <a class="collapse-item" href="{{ route('lokasi.tanah.index', ['lokasi' => 'tawang']) }}">Tanah</a>
                 <a class="collapse-item" href="{{ route('lokasi.peralatan.index', ['lokasi' => 'tawang']) }}">Peralatan & Mesin</a>
                 <a class="collapse-item" href="{{ route('lokasi.gedung.index', ['lokasi' => 'tawang']) }}">Gedung & Bangunan</a>
@@ -122,7 +125,6 @@
             </div>
         </li>
     
-        {{-- REVISI: Nama menu diubah --}}
         <li class="nav-item {{ request()->is($kelurahan['slug'] . '/tanah*') || request()->is($kelurahan['slug'] . '/peralatan*') || request()->is($kelurahan['slug'] . '/gedung*') || request()->is($kelurahan['slug'] . '/jalan*') || request()->is($kelurahan['slug'] . '/rusak*') ? 'active' : '' }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBarang{{ ucfirst($kelurahan['slug']) }}" aria-expanded="true" aria-controls="collapseBarang{{ ucfirst($kelurahan['slug']) }}">
                 <i class="fas fa-fw fa-archive"></i>
@@ -131,7 +133,6 @@
             <div id="collapseBarang{{ ucfirst($kelurahan['slug']) }}" class="collapse {{ request()->is($kelurahan['slug'] . '/tanah*') || request()->is($kelurahan['slug'] . '/peralatan*') || request()->is($kelurahan['slug'] . '/gedung*') || request()->is($kelurahan['slug'] . '/jalan*') || request()->is($kelurahan['slug'] . '/rusak*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Pilih Data:</h6>
-                    {{-- REVISI: Nama sub-menu diubah --}}
                     <a class="collapse-item" href="{{ route('lokasi.tanah.index', ['lokasi' => $kelurahan['slug']]) }}">Tanah</a>
                     <a class="collapse-item" href="{{ route('lokasi.peralatan.index', ['lokasi' => $kelurahan['slug']]) }}">Peralatan & Mesin</a>
                     <a class="collapse-item" href="{{ route('lokasi.gedung.index', ['lokasi' => $kelurahan['slug']]) }}">Gedung & Bangunan</a>

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Rusak; // Pastikan Anda membuat model Rusak
 use Illuminate\Http\Request;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class RusakController extends Controller
 {
@@ -19,7 +23,7 @@ class RusakController extends Controller
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('nama_barang', 'LIKE', "%{$search}%")
-                  ->orWhere('no_id_pemda', 'LIKE', "%{$search}%")
+                  ->orWhere('id_pemda', 'LIKE', "%{$search}%") // Menggunakan id_pemda
                   ->orWhere('spesifikasi', 'LIKE', "%{$search}%")
                   ->orWhere('no_polisi', 'LIKE', "%{$search}%");
             });
@@ -43,14 +47,15 @@ class RusakController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
+        // REVISI: Validasi disesuaikan
         $request->validate([
-            'no_id_pemda' => 'nullable|string|max:255',
+            'id_pemda' => 'required|string|max:255',
             'nama_barang' => 'required|string|max:255',
             'spesifikasi' => 'nullable|string|max:255',
             'no_polisi' => 'nullable|string|max:255',
-            'tahun_perolehan' => 'nullable|digits:4|integer|min:1900|max:'.(date('Y')+1),
-            'harga_perolehan' => 'nullable|numeric',
-            'kondisi' => 'nullable|string|max:255',
+            'tahun_perolehan' => 'required|digits:4',
+            'harga_perolehan' => 'required|numeric',
+            'kondisi' => 'required|string|max:255',
             'tercatat_di_kib' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
         ]);
@@ -58,7 +63,11 @@ class RusakController extends Controller
         $dataToStore = $request->all();
         $dataToStore['lokasi'] = $lokasi;
         
-        Rusak::create($dataToStore);
+        $rusak = Rusak::create($dataToStore);
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Barang Rusak', $rusak->nama_barang));
 
         return redirect()->route('lokasi.rusak.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data Barang Rusak berhasil ditambahkan.');
@@ -84,19 +93,24 @@ class RusakController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
+        // REVISI: Validasi disesuaikan
         $request->validate([
-            'no_id_pemda' => 'nullable|string|max:255',
+            'id_pemda' => 'required|string|max:255',
             'nama_barang' => 'required|string|max:255',
             'spesifikasi' => 'nullable|string|max:255',
             'no_polisi' => 'nullable|string|max:255',
-            'tahun_perolehan' => 'nullable|digits:4|integer|min:1900|max:'.(date('Y')+1),
-            'harga_perolehan' => 'nullable|numeric',
-            'kondisi' => 'nullable|string|max:255',
+            'tahun_perolehan' => 'required|digits:4',
+            'harga_perolehan' => 'required|numeric',
+            'kondisi' => 'required|string|max:255',
             'tercatat_di_kib' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
         ]);
         
         $rusak->update($request->all());
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Barang Rusak', $rusak->nama_barang));
 
         return redirect()->route('lokasi.rusak.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data Barang Rusak berhasil diperbarui.');
@@ -111,7 +125,12 @@ class RusakController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
         
+        $itemName = $rusak->nama_barang;
         $rusak->delete();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Barang Rusak', $itemName));
 
         return redirect()->route('lokasi.rusak.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data Barang Rusak berhasil dihapus.');
@@ -126,3 +145,4 @@ class RusakController extends Controller
         return view("pages.{$lokasi}.rusak.print", compact('dataRusak', 'lokasi'));
     }
 }
+

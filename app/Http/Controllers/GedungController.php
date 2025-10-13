@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Gedung;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class GedungController extends Controller
 {
@@ -41,7 +45,6 @@ class GedungController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
-        // REVISI: Validasi dilengkapi untuk semua kolom
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
@@ -64,7 +67,11 @@ class GedungController extends Controller
         $dataToStore = $request->all();
         $dataToStore['lokasi'] = $lokasi;
         
-        Gedung::create($dataToStore);
+        $gedung = Gedung::create($dataToStore);
+
+        // REVISI: Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Gedung & Bangunan', $gedung->jenis_barang));
 
         return redirect()->route('lokasi.gedung.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data gedung & bangunan berhasil ditambahkan.');
@@ -86,7 +93,6 @@ class GedungController extends Controller
     {
         if ($gedung->lokasi !== $lokasi) { abort(404); }
 
-        // REVISI: Validasi dilengkapi untuk semua kolom
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
@@ -108,6 +114,10 @@ class GedungController extends Controller
         
         $gedung->update($request->all());
 
+        // REVISI: Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Gedung & Bangunan', $gedung->jenis_barang));
+
         return redirect()->route('lokasi.gedung.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data gedung & bangunan berhasil diperbarui.');
     }
@@ -118,7 +128,14 @@ class GedungController extends Controller
     public function destroy($lokasi, Gedung $gedung)
     {
         if ($gedung->lokasi !== $lokasi) { abort(404); }
+        
+        $itemName = $gedung->jenis_barang; // Simpan nama sebelum dihapus
         $gedung->delete();
+        
+        // REVISI: Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Gedung & Bangunan', $itemName));
+
         return redirect()->route('lokasi.gedung.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data gedung & bangunan berhasil dihapus.');
     }

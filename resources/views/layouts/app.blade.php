@@ -10,6 +10,7 @@
     <meta name="author" content="">
 
     <title>SINDI - Dashboard</title>
+    <link rel="icon" href="{{ asset('img/tsk.png') }}" type="image/png">
 
     <!-- Custom fonts for this template-->
     {{-- PERBAIKAN ADA DI BARIS INI: type="text/css" --}}

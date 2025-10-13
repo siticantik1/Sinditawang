@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use Illuminate\Http\Request;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class RoomController extends Controller
 {
@@ -48,7 +52,11 @@ class RoomController extends Controller
         $dataToStore = $request->all();
         $dataToStore['lokasi'] = $lokasi;
         
-        Room::create($dataToStore);
+        $room = Room::create($dataToStore);
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Ruangan', $room->name));
 
         return redirect()->route('lokasi.room.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data ruangan berhasil ditambahkan.');
@@ -59,7 +67,6 @@ class RoomController extends Controller
      */
     public function edit($lokasi, Room $room)
     {
-        // Pengaman: Pastikan data yang diedit sesuai dengan lokasinya.
         if ($room->lokasi !== $lokasi) {
             abort(404, 'Data ruangan tidak ditemukan di lokasi ini.');
         }
@@ -82,6 +89,10 @@ class RoomController extends Controller
         
         $room->update($request->all());
 
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Ruangan', $room->name));
+
         return redirect()->route('lokasi.room.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data ruangan berhasil diperbarui.');
     }
@@ -95,7 +106,12 @@ class RoomController extends Controller
             abort(404, 'Data ruangan tidak ditemukan di lokasi ini.');
         }
         
+        $roomName = $room->name; // Simpan nama sebelum dihapus
         $room->delete();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Ruangan', $roomName));
 
         return redirect()->route('lokasi.room.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data ruangan berhasil dihapus.');

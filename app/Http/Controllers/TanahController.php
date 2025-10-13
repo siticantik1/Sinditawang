@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Tanah;
 use Illuminate\Http\Request;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class TanahController extends Controller
 {
@@ -40,7 +44,6 @@ class TanahController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
-        // REVISI: Validasi disesuaikan dengan semua kolom di form
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kode_barang' => 'required|string|max:255',
@@ -60,7 +63,11 @@ class TanahController extends Controller
         $dataToStore = $request->all();
         $dataToStore['lokasi'] = $lokasi;
         
-        Tanah::create($dataToStore);
+        $tanah = Tanah::create($dataToStore);
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Tanah', $tanah->nama_barang));
 
         return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data tanah berhasil ditambahkan.');
@@ -86,7 +93,6 @@ class TanahController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
-        // REVISI: Validasi disesuaikan dengan semua kolom di form
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kode_barang' => 'required|string|max:255',
@@ -105,6 +111,10 @@ class TanahController extends Controller
         
         $tanah->update($request->all());
 
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Tanah', $tanah->nama_barang));
+
         return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data tanah berhasil diperbarui.');
     }
@@ -118,7 +128,12 @@ class TanahController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
         
+        $itemName = $tanah->nama_barang;
         $tanah->delete();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Tanah', $itemName));
 
         return redirect()->route('lokasi.tanah.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data tanah berhasil dihapus.');

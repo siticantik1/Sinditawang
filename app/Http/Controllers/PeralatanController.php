@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Peralatan; // Pastikan Anda sudah membuat model Peralatan
 use Illuminate\Http\Request;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class PeralatanController extends Controller
 {
@@ -18,11 +22,10 @@ class PeralatanController extends Controller
 
         if ($search) {
             $query->where(function($q) use ($search) {
-                // REVISI: Disesuaikan dengan nama kolom di database
                 $q->where('nama_barang', 'LIKE', "%{$search}%")
                   ->orWhere('kode_barang', 'LIKE', "%{$search}%")
-                  ->orWhere('nomor_register', 'LIKE', "%{$search}%") // Menggunakan nomor_register
-                  ->orWhere('merk_tipe', 'LIKE', "%{$search}%")     // Menggunakan merk_tipe
+                  ->orWhere('nomor_register', 'LIKE', "%{$search}%")
+                  ->orWhere('merk_tipe', 'LIKE', "%{$search}%")
                   ->orWhere('bahan', 'LIKE', "%{$search}%");
             });
         }
@@ -45,7 +48,6 @@ class PeralatanController extends Controller
      */
     public function store(Request $request, $lokasi)
     {
-        // REVISI: Validasi disesuaikan dengan nama kolom yang benar
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
@@ -67,7 +69,11 @@ class PeralatanController extends Controller
         $dataToStore = $request->all();
         $dataToStore['lokasi'] = $lokasi;
         
-        Peralatan::create($dataToStore);
+        $peralatan = Peralatan::create($dataToStore);
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Peralatan & Mesin', $peralatan->nama_barang));
 
         return redirect()->route('lokasi.peralatan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data peralatan berhasil ditambahkan.');
@@ -93,7 +99,6 @@ class PeralatanController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
 
-        // REVISI: Validasi disesuaikan dengan nama kolom yang benar
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'kode_barang' => 'nullable|string|max:255',
@@ -114,6 +119,10 @@ class PeralatanController extends Controller
         
         $peralatan->update($request->all());
 
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Peralatan & Mesin', $peralatan->nama_barang));
+
         return redirect()->route('lokasi.peralatan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data peralatan berhasil diperbarui.');
     }
@@ -127,7 +136,12 @@ class PeralatanController extends Controller
             abort(404, 'Data tidak ditemukan di lokasi ini.');
         }
         
+        $itemName = $peralatan->nama_barang;
         $peralatan->delete();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Peralatan & Mesin', $itemName));
 
         return redirect()->route('lokasi.peralatan.index', ['lokasi' => $lokasi])
                          ->with('success', 'Data peralatan berhasil dihapus.');
@@ -142,3 +156,4 @@ class PeralatanController extends Controller
         return view("pages.{$lokasi}.peralatan.print", compact('dataPeralatan', 'lokasi'));
     }
 }
+

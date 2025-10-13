@@ -5,45 +5,10 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <!-- Topbar Search (Bisa dikosongkan jika tidak dipakai) -->
-    <form
-        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Cari..."
-                aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    </form>
+    <!-- Topbar Search Dihapus karena sudah ada di setiap halaman index -->
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
-
-        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                aria-labelledby="searchDropdown">
-                <form class="form-inline mr-auto w-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small"
-                            placeholder="Search for..." aria-label="Search"
-                            aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </li>
 
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
@@ -51,7 +16,9 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                @if (isset($notifications) && $notifications->count() > 0)
+                    <span class="badge badge-danger badge-counter">{{ $notifications->count() }}</span>
+                @endif
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -59,33 +26,32 @@
                 <h6 class="dropdown-header">
                     Pusat Notifikasi
                 </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                        <div class="icon-circle bg-primary">
-                            <i class="fas fa-file-alt text-white"></i>
+                @forelse ($notifications as $notification)
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-primary">
+                                <i class="fas fa-file-alt text-white"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500">12 Oktober 2025</div>
-                        <span class="font-weight-bold">Laporan bulanan baru siap diunduh!</span>
-                    </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                        <div class="icon-circle bg-success">
-                            <i class="fas fa-donate text-white"></i>
+                        <div>
+                            <div class="small text-gray-500">{{ $notification->created_at->locale('id')->diffForHumans() }}</div>
+                            <span class="font-weight-bold">{{ $notification->data['message'] }}</span>
                         </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500">7 Oktober 2025</div>
-                        Data baru telah ditambahkan ke KIB C.
-                    </div>
-                </a>
-                <a class="dropdown-item text-center small text-gray-500" href="#">Tampilkan Semua Notifikasi</a>
+                    </a>
+                @empty
+                     <a class="dropdown-item text-center small text-gray-500" href="#">Tidak ada notifikasi baru</a>
+                @endforelse
+                
+                @if (isset($notifications) && $notifications->count() > 0)
+                    <form action="{{ route('notifications.markAllAsRead') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="dropdown-item text-center small text-gray-500">Tandai semua sudah dibaca</button>
+                    </form>
+                @endif
             </div>
         </li>
         
-        {{-- Menambahkan Tanggal --}}
+        {{-- Tanggal --}}
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" role="button">
                 <i class="fas fa-calendar-alt fa-fw"></i>
@@ -93,7 +59,7 @@
             </a>
         </li>
         
-        {{-- Menambahkan Jam Digital --}}
+        {{-- Jam Digital --}}
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" role="button">
                 <i class="fas fa-clock fa-fw"></i>

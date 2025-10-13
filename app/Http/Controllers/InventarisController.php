@@ -6,6 +6,10 @@ use App\Models\Inventaris;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\User; // Import User model
+use App\Notifications\DataModificationNotification; // Import Notification class
+use Illuminate\Support\Facades\Auth; // Import Auth facade
+use Illuminate\Support\Facades\Notification; // Import Notification facade
 
 class InventarisController extends Controller
 {
@@ -31,7 +35,6 @@ class InventarisController extends Controller
         
         $dataInventaris = $query->latest()->paginate(10);
         
-        // REVISI: Mengambil semua ruangan di lokasi yang sama untuk modal 'pindah'
         $allRooms = Room::where('lokasi', $lokasi)->orderBy('name')->get();
 
         return view("pages.{$lokasi}.inventaris.index", compact('dataInventaris', 'lokasi', 'room', 'search', 'allRooms'));
@@ -57,7 +60,6 @@ class InventarisController extends Controller
             abort(404);
         }
 
-        // REVISI: Validasi disesuaikan agar sesuai dengan gambar
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'merk_model' => 'nullable|string|max:255',
@@ -74,7 +76,11 @@ class InventarisController extends Controller
         $dataToStore['lokasi'] = $lokasi;
         $dataToStore['room_id'] = $room->id;
         
-        Inventaris::create($dataToStore);
+        $inventaris = Inventaris::create($dataToStore);
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'ditambahkan', 'Inventaris', $inventaris->nama_barang));
 
         return redirect()->route('lokasi.inventaris.index', ['lokasi' => $lokasi, 'room' => $room->id])
                          ->with('success', 'Data inventaris berhasil ditambahkan.');
@@ -100,7 +106,6 @@ class InventarisController extends Controller
             abort(404);
         }
 
-        // REVISI: Validasi disesuaikan agar sesuai dengan gambar
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'merk_model' => 'nullable|string|max:255',
@@ -115,6 +120,10 @@ class InventarisController extends Controller
         
         $inventari->update($request->all());
 
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'diperbarui', 'Inventaris', $inventari->nama_barang));
+
         return redirect()->route('lokasi.inventaris.index', ['lokasi' => $lokasi, 'room' => $room->id])
                          ->with('success', 'Data inventaris berhasil diperbarui.');
     }
@@ -128,7 +137,12 @@ class InventarisController extends Controller
             abort(404);
         }
         
+        $itemName = $inventari->nama_barang;
         $inventari->delete();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), 'dihapus', 'Inventaris', $itemName));
 
         return redirect()->route('lokasi.inventaris.index', ['lokasi' => $lokasi, 'room' => $room->id])
                          ->with('success', 'Data inventaris berhasil dihapus.');
@@ -167,6 +181,10 @@ class InventarisController extends Controller
 
         $inventari->room_id = $request->new_room_id;
         $inventari->save();
+
+        // Kirim notifikasi ke Admin (1) dan Kecamatan (2)
+        $recipients = User::whereIn('role_id', [1, 2])->get();
+        Notification::send($recipients, new DataModificationNotification(Auth::user(), "dipindahkan ke ruang {$newRoom->name}", 'Inventaris', $inventari->nama_barang));
 
         return redirect()->route('lokasi.inventaris.index', ['lokasi' => $lokasi, 'room' => $room->id])
                          ->with('success', 'Barang berhasil dipindahkan ke ruangan ' . $newRoom->name);
