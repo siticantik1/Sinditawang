@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('{lokasi}')
         ->whereIn('lokasi', ['tawang', 'lengkongsari', 'cikalang', 'empang', 'kahuripan', 'tawangsari'])
         ->name('lokasi.')
+        ->middleware('lokasi.access') // <--- PEMBARUAN: MIDDLEWARE DITERAPKAN DI SINI
         ->group(function () {
             
             // Route untuk export Excel
