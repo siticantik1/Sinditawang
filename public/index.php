@@ -18,3 +18,6 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $app->handleRequest(Request::capture());
+
+// Arahkan ke file index.php publik milik Laravel
+require __DIR__ . '/../public/index.php';
