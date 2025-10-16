@@ -17,18 +17,12 @@
                         <input type="text" class="form-control" name="jenis_barang" value="{{ old('jenis_barang', $gedung->jenis_barang) }}" required>
                     </div>
                     
-                    <div class="card card-body border-left-secondary mb-3">
-                         <div class="form-row">
-                            <div class="form-group col-md-6 mb-0">
-                                <label for="kode_barang">Kode Barang</label>
-                                <input type="text" class="form-control" name="kode_barang" value="{{ old('kode_barang', $gedung->kode_barang) }}">
-                            </div>
-                            <div class="form-group col-md-6 mb-0">
-                                <label for="nomor_register">Nomor Register</label>
-                                <input type="text" class="form-control" name="nomor_register" value="{{ old('nomor_register', $gedung->nomor_register) }}" required>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="no_id_pemda">No Id Pemda</label>
+                        <input type="text" class="form-control" name="no_id_pemda" value="{{ old('no_id_pemda', $gedung->no_id_pemda) }}" required>
                     </div>
+                    
+                    
 
                     <div class="card card-body border-left-warning mb-3">
                         <h6 class="font-weight-bold">Konstruksi Bangunan</h6>

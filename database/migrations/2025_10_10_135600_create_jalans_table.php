@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('lokasi');
             $table->string('jenis_barang');
-            $table->string('kode_barang')->nullable();
-            $table->string('nomor_register');
+            $table->string('no_id_pemda')->nullable();
             $table->string('konstruksi');
             $table->integer('panjang')->nullable(); // KM
             $table->integer('lebar')->nullable(); // M

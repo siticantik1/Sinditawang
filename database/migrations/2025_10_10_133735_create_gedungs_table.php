@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('lokasi');
             $table->string('jenis_barang');
-            $table->string('kode_barang')->nullable();
-            $table->string('nomor_register');
+            $table->string('no_id_pemda')->nullable();
             // REVISI: Mengubah string menjadi enum
             $table->enum('kondisi_bangunan', ['Baik', 'Kurang Baik', 'Rusak Berat']);
             $table->enum('bertingkat', ['Bertingkat', 'Tidak']);

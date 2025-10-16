@@ -16,13 +16,10 @@
                         <input type="text" class="form-control" id="nama_barang" name="nama_barang" required>
                     </div>
                     <div class="form-group">
-                        <label for="kode_barang">Kode Barang</label>
-                        <input type="text" class="form-control" id="kode_barang" name="kode_barang">
+                        <label for="no_id_pemda">No Id Pemda</label>
+                        <input type="text" class="form-control" id="no_id_pemda" name="no_id_pemda">
                     </div>
-                    <div class="form-group">
-                        <label for="register">Nomor Register</label>
-                        <input type="text" class="form-control" id="register" name="register" required>
-                    </div>
+                    
                     <div class="form-group">
                         <label for="luas">Luas (M²)</label>
                         <input type="number" class="form-control" id="luas" name="luas" required>

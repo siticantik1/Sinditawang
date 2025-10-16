@@ -35,7 +35,7 @@
                 <tr>
                     <th rowspan="3" class="align-middle">No.</th>
                     <th rowspan="3" class="align-middle">Nama Barang / Jenis Barang</th>
-                    <th colspan="2">Nomor</th>
+                    <th rowspan="3" class="align-middle">No Id Pemda</th>
                     <th rowspan="3" class="align-middle">Luas (M²)</th>
                     <th rowspan="3" class="align-middle">Tahun Pengadaan</th>
                     <th rowspan="3" class="align-middle">Letak / Alamat</th>
@@ -46,8 +46,6 @@
                     <th rowspan="3" class="align-middle">Keterangan</th>
                 </tr>
                 <tr>
-                    <th rowspan="2" class="align-middle">Kode Barang</th>
-                    <th rowspan="2" class="align-middle">Register</th>
                     <th rowspan="2" class="align-middle">Hak</th>
                     <th colspan="2">Sertifikat</th>
                 </tr>
@@ -66,8 +64,7 @@
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->nama_barang }}</td>
-                        <td>{{ $item->kode_barang }}</td>
-                        <td class="text-center">{{ $item->register }}</td>
+                        <td>{{ $item->no_id_pemda }}</td>
                         <td class="text-right">{{ $item->luas }}</td>
                         <td class="text-center">{{ $item->tahun_pengadaan }}</td>
                         <td>{{ $item->alamat }}</td>

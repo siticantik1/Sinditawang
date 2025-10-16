@@ -16,12 +16,8 @@
                         <input type="text" class="form-control" name="nama_barang" required>
                     </div>
                     <div class="form-group">
-                        <label for="kode_barang">Kode Barang</label>
-                        <input type="text" class="form-control" name="kode_barang">
-                    </div>
-                    <div class="form-group">
-                        <label for="nomor_register">Nomor Register</label>
-                        <input type="text" class="form-control" name="nomor_register" required>
+                        <label for="no_id_pemda">No Id Pemda</label>
+                        <input type="text" class="form-control" name="no_id_pemda" required>
                     </div>
                     <div class="form-group">
                         <label for="merk_tipe">Merk / Tipe</label>

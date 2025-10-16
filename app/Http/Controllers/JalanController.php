@@ -50,8 +50,7 @@ class JalanController extends Controller
     {
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
-            'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'konstruksi' => 'required|string|max:255',
             'panjang' => 'nullable|numeric',
             'lebar' => 'nullable|numeric',
@@ -102,8 +101,7 @@ class JalanController extends Controller
 
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
-            'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'konstruksi' => 'required|string|max:255',
             'panjang' => 'nullable|numeric',
             'lebar' => 'nullable|numeric',

@@ -47,8 +47,7 @@ class GedungController extends Controller
     {
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
-            'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'kondisi_bangunan' => ['required', Rule::in(['Baik', 'Kurang Baik', 'Rusak Berat'])],
             'bertingkat' => ['required', Rule::in(['Bertingkat', 'Tidak'])],
             'beton' => ['required', Rule::in(['Beton', 'Tidak'])],
@@ -95,8 +94,7 @@ class GedungController extends Controller
 
         $request->validate([
             'jenis_barang' => 'required|string|max:255',
-            'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'kondisi_bangunan' => ['required', Rule::in(['Baik', 'Kurang Baik', 'Rusak Berat'])],
             'bertingkat' => ['required', Rule::in(['Bertingkat', 'Tidak'])],
             'beton' => ['required', Rule::in(['Beton', 'Tidak'])],

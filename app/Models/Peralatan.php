@@ -16,8 +16,7 @@ class Peralatan extends Model
      */
     protected $fillable = [
         'nama_barang',
-        'kode_barang',
-        'nomor_register', // Disesuaikan dari nomor_registrasi
+        'no_id_pemda',
         'merk_tipe',      // Menggabungkan merk dan tipe
         'ukuran',
         'bahan',

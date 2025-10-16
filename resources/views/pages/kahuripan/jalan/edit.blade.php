@@ -17,12 +17,8 @@
                         <input type="text" class="form-control" name="jenis_barang" value="{{ old('jenis_barang', $jalan->jenis_barang) }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="kode_barang">Kode Barang</label>
-                        <input type="text" class="form-control" name="kode_barang" value="{{ old('kode_barang', $jalan->kode_barang) }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="nomor_register">Nomor Register</label>
-                        <input type="text" class="form-control" name="nomor_register" value="{{ old('nomor_register', $jalan->nomor_register) }}" required>
+                        <label for="no_id_pemda">No Id Pemda</label>
+                        <input type="text" class="form-control" name="no_id_pemda" value="{{ old('no_id_pemda', $jalan->no_id_pemda) }}">
                     </div>
                     <div class="form-group">
                         <label for="konstruksi">Konstruksi</label>

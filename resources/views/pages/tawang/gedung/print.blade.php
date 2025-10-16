@@ -27,7 +27,7 @@
                 <tr>
                     <th rowspan="2" class="align-middle">No</th>
                     <th rowspan="2" class="align-middle">Jenis Barang / Nama Barang</th>
-                    <th colspan="2">Nomor</th>
+                    <th rowspan="2" class="align-middle">No Id Pemda</th>
                     <th rowspan="2" class="align-middle">Kondisi Bangunan (B, KB, RB)</th>
                     <th colspan="2">Konstruksi Bangunan</th>
                     <th rowspan="2" class="align-middle">Luas Lantai (M2)</th>
@@ -41,8 +41,6 @@
                     <th rowspan="2" class="align-middle">Ket.</th>
                 </tr>
                 <tr>
-                    <th>Kode Barang</th>
-                    <th>Register</th>
                     <th>Bertingkat / Tidak</th>
                     <th>Beton / Tidak</th>
                     <th>Tanggal</th>

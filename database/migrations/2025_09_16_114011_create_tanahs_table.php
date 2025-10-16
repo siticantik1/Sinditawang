@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('lokasi')->nullable(); // Dibuat nullable sesuai permintaan
             $table->string('nama_barang');
-            $table->string('kode_barang'); // Dibuat wajib
-            $table->string('register'); // Dibuat wajib
+            $table->string('no_id_pemda')->nullable();
             $table->integer('luas');
             $table->year('tahun_pengadaan');
             $table->text('alamat');

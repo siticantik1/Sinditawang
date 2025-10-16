@@ -58,7 +58,7 @@
                     <tr>
                         <th rowspan="2" class="align-middle">No</th>
                         <th rowspan="2" class="align-middle">Nama Barang / Jenis Barang</th>
-                        <th colspan="2">Nomor</th>
+                        <th rowspan="2" class="align-middle">No Id Pemda</th>
                         <th rowspan="2" class="align-middle">Merk / Tipe</th>
                         <th rowspan="2" class="align-middle">Ukuran / CC</th>
                         <th rowspan="2" class="align-middle">Bahan</th>
@@ -70,8 +70,7 @@
                         <th rowspan="2" class="align-middle">Aksi</th>
                     </tr>
                     <tr>
-                        <th>Kode Barang</th>
-                        <th>Register</th>
+                        
                         <th>Pabrik</th>
                         <th>Rangka</th>
                         <th>Mesin</th>
@@ -79,33 +78,13 @@
                         <th>BPKB</th>
                     </tr>
                     {{-- REVISI: Menambahkan baris nomor kolom --}}
-                    <tr>
-                        <th>(1)</th>
-                        <th>(2)</th>
-                        <th>(3)</th>
-                        <th>(4)</th>
-                        <th>(5)</th>
-                        <th>(6)</th>
-                        <th>(7)</th>
-                        <th>(8)</th>
-                        <th>(9)</th>
-                        <th>(10)</th>
-                        <th>(11)</th>
-                        <th>(12)</th>
-                        <th>(13)</th>
-                        <th>(14)</th>
-                        <th>(15)</th>
-                        <th>(16)</th>
-                        <th>-</th>
-                    </tr>
                 </thead>
                 <tbody>
                     @forelse ($dataPeralatan as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataPeralatan->firstItem() - 1 }}</td>
                         <td>{{ $item->nama_barang }}</td>
-                        <td>{{ $item->kode_barang }}</td>
-                        <td class="text-center">{{ $item->nomor_register }}</td>
+                        <td>{{ $item->no_id_pemda }}</td>
                         <td>{{ $item->merk_tipe }}</td>
                         <td>{{ $item->ukuran }}</td>
                         <td>{{ $item->bahan }}</td>

@@ -23,8 +23,7 @@ class Gedung extends Model
      */
     protected $fillable = [
         'lokasi',
-        'jenis_barang',
-        'kode_barang',
+        'no_id_pemda',
         'nomor_register',
         'kondisi_bangunan',
         'bertingkat',

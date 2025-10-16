@@ -46,8 +46,7 @@ class TanahController extends Controller
     {
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            'kode_barang' => 'required|string|max:255',
-            'register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'luas' => 'required|integer',
             'tahun_pengadaan' => 'required|digits:4',
             'alamat' => 'required|string',
@@ -95,8 +94,7 @@ class TanahController extends Controller
 
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            'kode_barang' => 'required|string|max:255',
-            'register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'luas' => 'required|integer',
             'tahun_pengadaan' => 'required|digits:4',
             'alamat' => 'required|string',

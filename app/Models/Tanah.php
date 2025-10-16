@@ -20,8 +20,7 @@ class Tanah extends Model
      */
     protected $fillable = [
         'lokasi',
-        'nama_barang',
-        'kode_barang',
+        'no_id_pemda',
         'register', // Disesuaikan dengan migrasi
         'luas',
         'tahun_pengadaan',

@@ -58,7 +58,7 @@
                     <tr>
                         <th rowspan="2" class="align-middle">No</th>
                         <th rowspan="2" class="align-middle">Jenis Barang / Nama Barang</th>
-                        <th colspan="2">Nomor</th>
+                        <th colspan="2">No Id Pemda</th>
                         <th rowspan="2" class="align-middle">Kondisi Bangunan (B, KB, RB)</th>
                         <th colspan="2">Konstruksi Bangunan</th>
                         <th rowspan="2" class="align-middle">Luas Lantai (M2)</th>
@@ -73,8 +73,6 @@
                         <th rowspan="2" class="align-middle">Aksi</th>
                     </tr>
                     <tr>
-                        <th>Kode Barang</th>
-                        <th>Register</th>
                         <th>Bertingkat / Tidak</th>
                         <th>Beton / Tidak</th>
                         <th>Tanggal</th>
@@ -86,8 +84,7 @@
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataGedung->firstItem() - 1 }}</td>
                         <td>{{ $item->jenis_barang }}</td>
-                        <td>{{ $item->kode_barang }}</td>
-                        <td class="text-center">{{ $item->nomor_register }}</td>
+                        <td>{{ $item->no_id_pemda }}</td>
                         <td class="text-center">{{ $item->kondisi_bangunan }}</td>
                         <td class="text-center">{{ $item->bertingkat }}</td>
                         <td class="text-center">{{ $item->beton }}</td>

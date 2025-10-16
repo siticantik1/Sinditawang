@@ -20,8 +20,7 @@ class Jalan extends Model
     protected $fillable = [
         'lokasi',
         'jenis_barang',
-        'kode_barang',
-        'nomor_register',
+        'no_id_pemda',
         'konstruksi',
         'panjang',
         'lebar',

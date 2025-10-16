@@ -50,8 +50,7 @@ class PeralatanController extends Controller
     {
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'merk_tipe' => 'nullable|string|max:255',
             'ukuran' => 'nullable|string|max:255',
             'bahan' => 'nullable|string|max:255',
@@ -101,8 +100,7 @@ class PeralatanController extends Controller
 
         $request->validate([
             'nama_barang' => 'required|string|max:255',
-            'kode_barang' => 'nullable|string|max:255',
-            'nomor_register' => 'required|string|max:255',
+            'no_id_pemda' => 'required|string|max:255',
             'merk_tipe' => 'nullable|string|max:255',
             'ukuran' => 'nullable|string|max:255',
             'bahan' => 'nullable|string|max:255',

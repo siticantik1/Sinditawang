@@ -58,7 +58,7 @@
                     <tr>
                         <th rowspan="2" class="align-middle">No</th>
                         <th rowspan="2" class="align-middle">Jenis Barang / Nama Barang</th>
-                        <th colspan="2">Nomor</th>
+                        <th rowspan="2" class="align-middle">No Id Pemda</th>
                         <th rowspan="2" class="align-middle">Konstruksi</th>
                         <th rowspan="2" class="align-middle">Panjang (KM)</th>
                         <th rowspan="2" class="align-middle">Lebar (M)</th>
@@ -74,8 +74,6 @@
                         <th rowspan="2" class="align-middle">Aksi</th>
                     </tr>
                     <tr>
-                        <th>Kode Barang</th>
-                        <th>Register</th>
                         <th>Tanggal</th>
                         <th>Nomor</th>
                     </tr>
@@ -85,8 +83,7 @@
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataJalan->firstItem() - 1 }}</td>
                         <td>{{ $item->jenis_barang }}</td>
-                        <td>{{ $item->kode_barang }}</td>
-                        <td class="text-center">{{ $item->nomor_register }}</td>
+                        <td>{{ $item->no_id_pemda }}</td>
                         <td>{{ $item->konstruksi }}</td>
                         <td class="text-right">{{ $item->panjang }}</td>
                         <td class="text-right">{{ $item->lebar }}</td>
