@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController; // Import Controller baru
+use App\Http\Controllers\UserController;
 
 // --- CONTROLLER DINAMIS (SATU UNTUK SEMUA) ---
 use App\Http\Controllers\TanahController;
@@ -45,6 +46,8 @@ Route::middleware('auth')->group(function () {
 
     // REVISI: Tambahkan rute untuk menandai notifikasi sudah dibaca
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+
+    Route::resource('user', UserController::class);
 
     // --- RUTE DINAMIS UNTUK SEMUA MODUL ---
     Route::prefix('{lokasi}')

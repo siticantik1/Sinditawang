@@ -169,7 +169,7 @@
     {{-- Tampilkan Menu Account hanya untuk Admin --}}
     @if ($roleId == 1)
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route ('user.index')}}">
             <i class="fas fa-fw fa-user-circle"></i>
             <span>Account</span>
         </a>
