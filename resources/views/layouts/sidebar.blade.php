@@ -155,17 +155,11 @@
     @endforeach
 
     {{-- Tampilkan Menu Laporan & Pengaturan untuk Admin dan Kecamatan --}}
-    @if ($roleId == 1 || $roleId == 2)
+    @if ($roleId == 1 || )
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
-        Laporan & Pengaturan
+        account
     </div>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-fw fa-file-alt"></i>
-            <span>Laporan Keseluruhan</span>
-        </a>
-    </li>
     {{-- Tampilkan Menu Account hanya untuk Admin --}}
     @if ($roleId == 1)
     <li class="nav-item">
