@@ -24,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
         // Kode ini akan memberitahu Laravel untuk menjalankan composer ini
         // setiap kali view 'layouts.navbar' akan dimuat.
         View::composer('layouts.navbar', \App\Http\View\Composers\NotificationComposer::class);
+
+        if ($this->app->environment('production')) {
+        \URL::forceScheme('https');
+        }
     }
 }
 
