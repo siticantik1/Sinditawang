@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SINDI - Login</title>
+    <title>PANDAWA - Login</title>
 
     <!-- Custom fonts for this template--><link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
@@ -52,7 +52,7 @@
                                     <div class="text-center">
                                         {{-- Tambah Logo --}}
                                         <img src="{{ asset('img/tsk.png') }}" alt="Logo Pemkot Tasikmalaya" class="mb-4" style="max-width: 100px;">
-                                        <h1 class="h4 text-gray-900 mb-4">Selamat Datang di SINDI</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Selamat Datang di PANDAWA</h1>
                                     </div>
 
                                     {{-- Tampilkan pesan success --}}
