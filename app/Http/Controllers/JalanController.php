@@ -49,21 +49,24 @@ class JalanController extends Controller
     public function store(Request $request, $lokasi)
     {
         $request->validate([
-            'jenis_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'konstruksi' => 'required|string|max:255',
-            'panjang' => 'nullable|numeric',
-            'lebar' => 'nullable|numeric',
-            'luas' => 'nullable|numeric',
-            'letak_lokasi' => 'required|string',
-            'dokumen_tanggal' => 'nullable|date',
-            'dokumen_nomor' => 'nullable|string|max:255',
-            'status_tanah' => 'required|string|max:255',
-            'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'kondisi' => ['required', Rule::in(['B', 'KB', 'RB'])],
-            'keterangan' => 'nullable|string',
+            'kode_barang'                     => 'required|string|max:255',
+        'nama_barang'                     => 'required|string|max:255',
+        'nibar'                           => 'nullable|string|max:255',
+        'nomor_register'                  => 'required|string|max:255',
+        'spesifikasi_barang'              => 'nullable|string',
+        'spesifikasi_lainnya'             => 'nullable|string',
+        'nomor_ruas_jalan_jembatan_irigasi' => 'nullable|string|max:255',
+        'Lok'                          => 'required|string', // Kolom 'Lokasi' kedua (Sesuai Kolom 13)
+        'titik_koordinat'                 => 'nullable|string|max:255',
+        'status_kepemilikan_tanah'        => 'nullable|string|max:255',
+        'jumlah'                          => 'required|integer|min:0',
+        'satuan'                          => 'required|string|max:255',
+        'harga_satuan'                    => 'required|numeric|min:0',
+        'nilai_perolehan'                 => 'required|numeric|min:0',
+        'cara_perolehan'                  => 'required|string|max:255',
+        'tanggal_perolehan'               => 'required|date',
+        'status_penggunaan'               => 'nullable|string|max:255',
+        'keterangan'                      => 'nullable|string',
         ]);
         
         $dataToStore = $request->all();
@@ -100,21 +103,24 @@ class JalanController extends Controller
         }
 
         $request->validate([
-            'jenis_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'konstruksi' => 'required|string|max:255',
-            'panjang' => 'nullable|numeric',
-            'lebar' => 'nullable|numeric',
-            'luas' => 'nullable|numeric',
-            'letak_lokasi' => 'required|string',
-            'dokumen_tanggal' => 'nullable|date',
-            'dokumen_nomor' => 'nullable|string|max:255',
-            'status_tanah' => 'required|string|max:255',
-            'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'kondisi' => ['required', Rule::in(['B', 'KB', 'RB'])],
-            'keterangan' => 'nullable|string',
+            'kode_barang'                     => 'required|string|max:255',
+        'nama_barang'                     => 'required|string|max:255',
+        'nibar'                           => 'nullable|string|max:255',
+        'nomor_register'                  => 'required|string|max:255',
+        'spesifikasi_barang'              => 'nullable|string',
+        'spesifikasi_lainnya'             => 'nullable|string',
+        'nomor_ruas_jalan_jembatan_irigasi' => 'nullable|string|max:255',
+        'Lok'                          => 'required|string', // Kolom 'Lokasi' kedua (Sesuai Kolom 13)
+        'titik_koordinat'                 => 'nullable|string|max:255',
+        'status_kepemilikan_tanah'        => 'nullable|string|max:255',
+        'jumlah'                          => 'required|integer|min:0',
+        'satuan'                          => 'required|string|max:255',
+        'harga_satuan'                    => 'required|numeric|min:0',
+        'nilai_perolehan'                 => 'required|numeric|min:0',
+        'cara_perolehan'                  => 'required|string|max:255',
+        'tanggal_perolehan'               => 'required|date',
+        'status_penggunaan'               => 'nullable|string|max:255',
+        'keterangan'                      => 'nullable|string',
         ]);
         
         $jalan->update($request->all());

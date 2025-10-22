@@ -61,15 +61,16 @@ class InventarisController extends Controller
         }
 
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'merk_model' => 'nullable|string|max:255',
-            'bahan' => 'nullable|string|max:255',
-            'tahun_pembelian' => 'required|digits:4',
-            'kode_barang' => 'required|string|max:255',
-            'jumlah' => 'required|integer|min:1',
-            'harga_perolehan' => 'required|numeric',
-            'kondisi' => ['required', Rule::in(['B', 'KB', 'RB'])],
-            'keterangan' => 'nullable|string',
+            'nibar'              => 'nullable|string|max:255',
+        'nomor_register'     => 'nullable|string|max:255',
+        'kode_barang'        => 'required|string|max:255',
+        'nama_barang'        => 'required|string|max:255',
+        'spesifikasi_barang' => 'nullable|string',
+        'merk_tipe'          => 'nullable|string|max:255',
+        'tahun_perolehan'    => 'required|digits:4|integer|min:1900', // Validasi untuk format tahun
+        'jumlah'             => 'required|integer|min:0',
+        'satuan'             => 'required|string|max:255',
+        'keterangan'         => 'nullable|string',
         ]);
         
         $dataToStore = $request->all();
@@ -107,15 +108,16 @@ class InventarisController extends Controller
         }
 
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'merk_model' => 'nullable|string|max:255',
-            'bahan' => 'nullable|string|max:255',
-            'tahun_pembelian' => 'required|digits:4',
-            'kode_barang' => 'required|string|max:255',
-            'jumlah' => 'required|integer|min:1',
-            'harga_perolehan' => 'required|numeric',
-            'kondisi' => ['required', Rule::in(['B', 'KB', 'RB'])],
-            'keterangan' => 'nullable|string',
+            'nibar'              => 'nullable|string|max:255',
+        'nomor_register'     => 'nullable|string|max:255',
+        'kode_barang'        => 'required|string|max:255',
+        'nama_barang'        => 'required|string|max:255',
+        'spesifikasi_barang' => 'nullable|string',
+        'merk_tipe'          => 'nullable|string|max:255',
+        'tahun_perolehan'    => 'required|digits:4|integer|min:1900', // Validasi untuk format tahun
+        'jumlah'             => 'required|integer|min:0',
+        'satuan'             => 'required|string|max:255',
+        'keterangan'         => 'nullable|string',
         ]);
         
         $inventari->update($request->all());

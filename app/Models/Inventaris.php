@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inventaris extends Model
 {
@@ -24,24 +25,23 @@ class Inventaris extends Model
     protected $fillable = [
         'lokasi',
         'room_id',
-        'nama_barang',
-        'merk_model',
-        'bahan',
-        'tahun_pembelian',
+        'nibar',
+        'nomor_register',
         'kode_barang',
+        'nama_barang',
+        'spesifikasi_barang',
+        'merk_tipe',
+        'tahun_perolehan',
         'jumlah',
-        'harga_perolehan',
-        'kondisi',
+        'satuan',
         'keterangan',
     ];
-
+    
     /**
-     * Mendefinisikan relasi "belongsTo" ke model Room.
-     * Setiap barang inventaris milik satu ruangan.
+     * Mendefinisikan relasi ke model Room.
      */
-    public function room()
+    public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
     }
 }
-

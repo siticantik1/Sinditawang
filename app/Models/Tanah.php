@@ -10,38 +10,50 @@ class Tanah extends Model
     use HasFactory;
 
     /**
-     * Nama tabel yang terhubung dengan model ini.
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'tanahs';
 
     /**
-     * Atribut yang dapat diisi secara massal (mass assignable).
-     * Pastikan semua kolom dari form Anda terdaftar di sini.
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
      */
     protected $fillable = [
         'lokasi',
-        'no_id_pemda',
-        'register', // Disesuaikan dengan migrasi
-        'luas',
-        'tahun_pengadaan',
-        'alamat',
-        'status_hak', // Disesuaikan dengan migrasi
-        'tanggal_sertifikat',
-        'nomor_sertifikat',
-        'penggunaan',
-        'asal_usul',
-        'harga',
+        'kode_barang',
+        'nama_barang',
+        'nibar',
+        'nomor_register',
+        'spesifikasi_barang',
+        'spesifikasi_lainnya',
+        'jumlah',
+        'satuan',
+        'Lok', // Nama kolom kedua untuk lokasi (dengan 'L' kapital)
+        'titik_koordinat',
+        'bukti_nama',
+        'bukti_nomor',
+        'bukti_tanggal',
+        'nama_kepemilikan_dokumen',
+        'nilai_perolehan',
+        'harga_satuan',
+        'cara_perolehan',
+        'tanggal_perolehan',
+        'status_penggunaan',
         'keterangan',
     ];
 
     /**
-     * Tipe data casting untuk atribut model.
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
      */
     protected $casts = [
-        'luas' => 'integer',
-        'tahun_pengadaan' => 'integer',
-        'harga' => 'float',
-        'tanggal_sertifikat' => 'date',
+        'bukti_tanggal' => 'date',
+        'tanggal_perolehan' => 'date',
+        'nilai_perolehan' => 'decimal:2',
+        'harga_satuan' => 'decimal:2',
     ];
 }
-

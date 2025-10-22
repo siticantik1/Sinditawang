@@ -38,7 +38,7 @@
         <div class="sidebar-brand-icon">
             <img src="{{ asset('img/tsk.png') }}" alt="Logo Pemkot Tasikmalaya" style="height: 40px;">
         </div>
-        <div class="sidebar-brand-text mx-2">SINDI</div>
+        <div class="sidebar-brand-text mx-2">PANDAWA</div>
     </a>
 
     <!-- Divider -->
@@ -73,10 +73,14 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pilih Ruangan:</h6>
                 @forelse ($tawangRooms as $room)
+                    {{-- REVISI DIMULAI DI SINI --}}
                     <a class="collapse-item {{ request()->route('room') && request()->route('room')->id == $room->id ? 'active' : '' }}"
-                       href="{{ route('lokasi.inventaris.index', ['lokasi' => 'tawang', 'room' => $room->id]) }}">
+                       href="{{ route('lokasi.inventaris.index', ['lokasi' => 'tawang', 'room' => $room->id]) }}"
+                       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                       title="{{ $room->name }}">
                         {{ $room->name }}
                     </a>
+                    {{-- REVISI SELESAI --}}
                 @empty
                     <a class="collapse-item" href="{{ route('lokasi.room.create', ['lokasi' => 'tawang']) }}">Tambah Ruangan Dulu</a>
                 @endforelse
@@ -125,10 +129,14 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Pilih Ruangan:</h6>
                     @forelse ($allRoomsByLocation[$kelurahan['slug']] ?? [] as $room)
+                        {{-- REVISI DIMULAI DI SINI --}}
                         <a class="collapse-item {{ request()->route('room') && request()->route('room')->id == $room->id ? 'active' : '' }}"
-                           href="{{ route('lokasi.inventaris.index', ['lokasi' => $kelurahan['slug'], 'room' => $room->id]) }}">
+                           href="{{ route('lokasi.inventaris.index', ['lokasi' => $kelurahan['slug'], 'room' => $room->id]) }}"
+                           style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                           title="{{ $room->name }}">
                             {{ $room->name }}
                         </a>
+                        {{-- REVISI SELESAI --}}
                     @empty
                         <a class="collapse-item" href="{{ route('lokasi.room.create', ['lokasi' => $kelurahan['slug']]) }}">Tambah Ruangan Dulu</a>
                     @endforelse
@@ -155,7 +163,7 @@
     @endforeach
 
     {{-- Tampilkan Menu Laporan & Pengaturan untuk Admin dan Kecamatan --}}
-    @if ($roleId == 1 || )
+    @if ($roleId == 1 )
     <hr class="sidebar-divider">
     <div class="sidebar-heading">
         account
@@ -180,4 +188,3 @@
     </div>
 
 </ul>
-

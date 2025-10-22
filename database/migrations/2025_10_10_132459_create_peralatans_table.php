@@ -14,20 +14,28 @@ return new class extends Migration
         Schema::create('peralatans', function (Blueprint $table) {
             $table->id();
             $table->string('lokasi');
-            $table->string('nama_barang');
-            $table->string('no_id_pemda')->nullable();
-            $table->string('merk_tipe')->nullable();
-            $table->string('ukuran')->nullable();
-            $table->string('bahan')->nullable();
-            $table->year('tahun_pembelian');
-            $table->string('nomor_pabrik')->nullable();
-            $table->string('nomor_rangka')->nullable();
-            $table->string('nomor_mesin')->nullable();
-            $table->string('nomor_polisi')->nullable();
-            $table->string('nomor_bpkb')->nullable();
-            $table->string('asal_usul');
-            $table->decimal('harga', 15, 2);
-            $table->text('keterangan')->nullable();
+            $table->string('kode_barang');                   // Sesuai Kolom (6)
+            $table->string('nama_barang');                  // Sesuai Kolom (7)
+            $table->string('nibr')->nullable();             // Sesuai Kolom (8)
+            $table->string('nomor_register');               // Sesuai Kolom (9)
+            $table->string('spesifikasi_barang')->nullable(); // Sesuai Kolom (10)
+            $table->string('merk_tipe')->nullable();        // Sesuai Kolom (11)
+            $table->string('Lok');                       // Sesuai Kolom (12)
+            $table->string('spesifikasi_lainnya')->nullable(); // Sesuai Kolom (13)
+
+            // Kendaraan Dinas
+            $table->string('nomor_polisi')->nullable();     // Sesuai Kolom (14)
+            $table->string('nomor_rangka')->nullable();     // Sesuai Kolom (15)
+            $table->string('nomor_bpkb')->nullable();       // Sesuai Kolom (16)
+
+            $table->unsignedInteger('jumlah');              // Sesuai Kolom (17)
+            $table->string('satuan');                       // Sesuai Kolom (18)
+            $table->decimal('harga_satuan', 15, 2);         // Sesuai Kolom (19)
+            $table->decimal('nilai_perolehan', 15, 2);      // Sesuai Kolom (20)
+            $table->string('cara_perolehan');               // Sesuai Kolom (21)
+            $table->date('tanggal_perolehan');              // Sesuai Kolom (22)
+            $table->string('status_penggunaan')->nullable(); // Sesuai Kolom (23)
+            $table->text('keterangan')->nullable();         // Sesuai Kolom (24)
             $table->timestamps();
         });
     }

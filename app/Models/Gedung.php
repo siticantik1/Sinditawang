@@ -10,33 +10,36 @@ class Gedung extends Model
     use HasFactory;
 
     /**
-     * Nama tabel yang terhubung dengan model.
+     * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'gedungs';
 
     /**
-     * Atribut yang dapat diisi secara massal.
+     * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
         'lokasi',
-        'no_id_pemda',
+        'kode_barang',
+        'nama_barang',
+        'nbar',
         'nomor_register',
-        'kondisi_bangunan',
-        'bertingkat',
-        'beton',
-        'luas_lantai',
-        'letak_lokasi',
-        'dokumen_tanggal',
-        'dokumen_nomor',
-        'luas',
-        'status_tanah',
-        'kode_tanah',
-        'asal_usul',
-        'harga',
+        'spesifikasi_barang',
+        'spesifikasi_lainnya',
+        'jumlah_lantai',
+        'Lok', // Nama kolom kedua untuk lokasi (dengan 'L' kapital)
+        'titik_koordinat',
+        'status_kepemilikan_tanah',
+        'jumlah',
+        'satuan',
+        'harga_satuan',
+        'nilai_perolehan',
+        'cara_perolehan',
+        'tanggal_perolehan',
+        'status_penggunaan',
         'keterangan',
     ];
 
@@ -46,8 +49,8 @@ class Gedung extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'dokumen_tanggal' => 'date',
-        'harga' => 'decimal:2',
+        'tanggal_perolehan' => 'date',
+        'harga_satuan' => 'decimal:2',
+        'nilai_perolehan' => 'decimal:2',
     ];
 }
-

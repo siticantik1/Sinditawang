@@ -10,41 +10,47 @@ class Jalan extends Model
     use HasFactory;
 
     /**
-     * Nama tabel yang terhubung dengan model ini.
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'jalans';
 
     /**
-     * Atribut yang dapat diisi secara massal (mass assignable).
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
      */
     protected $fillable = [
         'lokasi',
-        'jenis_barang',
-        'no_id_pemda',
-        'konstruksi',
-        'panjang',
-        'lebar',
-        'luas',
-        'letak_lokasi',
-        'dokumen_tanggal',
-        'dokumen_nomor',
-        'status_tanah',
-        'kode_tanah',
-        'asal_usul',
-        'harga',
-        'kondisi',
+        'kode_barang',
+        'nama_barang',
+        'nibar',
+        'nomor_register',
+        'spesifikasi_barang',
+        'spesifikasi_lainnya',
+        'nomor_ruas_jalan_jembatan_irigasi',
+        'Lok', // Nama kolom kedua untuk lokasi (dengan 'L' kapital)
+        'titik_koordinat',
+        'status_kepemilikan_tanah',
+        'jumlah',
+        'satuan',
+        'harga_satuan',
+        'nilai_perolehan',
+        'cara_perolehan',
+        'tanggal_perolehan',
+        'status_penggunaan',
         'keterangan',
     ];
 
     /**
-     * Tipe data casting untuk atribut model.
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
      */
     protected $casts = [
-        'dokumen_tanggal' => 'date',
-        'harga' => 'float',
-        'panjang' => 'integer',
-        'lebar' => 'integer',
-        'luas' => 'integer',
+        'tanggal_perolehan' => 'date',
+        'harga_satuan' => 'decimal:2',
+        'nilai_perolehan' => 'decimal:2',
     ];
 }
-

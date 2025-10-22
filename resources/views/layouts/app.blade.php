@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SINDI - Dashboard</title>
+    <title>PANDAWA - Dashboard</title>
     <link rel="icon" href="{{ asset('img/tsk.png') }}" type="image/png">
 
     <!-- Custom fonts for this template-->

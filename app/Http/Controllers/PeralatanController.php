@@ -49,20 +49,25 @@ class PeralatanController extends Controller
     public function store(Request $request, $lokasi)
     {
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'merk_tipe' => 'nullable|string|max:255',
-            'ukuran' => 'nullable|string|max:255',
-            'bahan' => 'nullable|string|max:255',
-            'tahun_pembelian' => 'required|digits:4',
-            'nomor_pabrik' => 'nullable|string|max:255',
-            'nomor_rangka' => 'nullable|string|max:255',
-            'nomor_mesin' => 'nullable|string|max:255',
-            'nomor_polisi' => 'nullable|string|max:255',
-            'nomor_bpkb' => 'nullable|string|max:255',
-            'asal_usul' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'keterangan' => 'nullable|string',
+            'kode_barang'         => 'required|string|max:255',
+        'nama_barang'         => 'required|string|max:255',
+        'nibr'                => 'nullable|string|max:255',
+        'nomor_register'      => 'required|string|max:255',
+        'spesifikasi_barang'  => 'nullable|string',
+        'merk_tipe'           => 'nullable|string|max:255',
+        'Lok'              => 'required|string', // Kolom 'Lokasi' kedua (Sesuai Kolom 12)
+        'spesifikasi_lainnya' => 'nullable|string',
+        'nomor_polisi'        => 'nullable|string|max:255',
+        'nomor_rangka'        => 'nullable|string|max:255',
+        'nomor_bpkb'          => 'nullable|string|max:255',
+        'jumlah'              => 'required|integer|min:0',
+        'satuan'              => 'required|string|max:255',
+        'harga_satuan'        => 'required|numeric|min:0',
+        'nilai_perolehan'     => 'required|numeric|min:0',
+        'cara_perolehan'      => 'required|string|max:255',
+        'tanggal_perolehan'   => 'required|date',
+        'status_penggunaan'   => 'nullable|string|max:255',
+        'keterangan'          => 'nullable|string',
         ]);
         
         $dataToStore = $request->all();
@@ -99,20 +104,25 @@ class PeralatanController extends Controller
         }
 
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'merk_tipe' => 'nullable|string|max:255',
-            'ukuran' => 'nullable|string|max:255',
-            'bahan' => 'nullable|string|max:255',
-            'tahun_pembelian' => 'required|digits:4',
-            'nomor_pabrik' => 'nullable|string|max:255',
-            'nomor_rangka' => 'nullable|string|max:255',
-            'nomor_mesin' => 'nullable|string|max:255',
-            'nomor_polisi' => 'nullable|string|max:255',
-            'nomor_bpkb' => 'nullable|string|max:255',
-            'asal_usul' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'keterangan' => 'nullable|string',
+            'kode_barang'         => 'required|string|max:255',
+        'nama_barang'         => 'required|string|max:255',
+        'nibr'                => 'nullable|string|max:255',
+        'nomor_register'      => 'required|string|max:255',
+        'spesifikasi_barang'  => 'nullable|string',
+        'merk_tipe'           => 'nullable|string|max:255',
+        'Lok'              => 'required|string', // Kolom 'Lokasi' kedua (Sesuai Kolom 12)
+        'spesifikasi_lainnya' => 'nullable|string',
+        'nomor_polisi'        => 'nullable|string|max:255',
+        'nomor_rangka'        => 'nullable|string|max:255',
+        'nomor_bpkb'          => 'nullable|string|max:255',
+        'jumlah'              => 'required|integer|min:0',
+        'satuan'              => 'required|string|max:255',
+        'harga_satuan'        => 'required|numeric|min:0',
+        'nilai_perolehan'     => 'required|numeric|min:0',
+        'cara_perolehan'      => 'required|string|max:255',
+        'tanggal_perolehan'   => 'required|date',
+        'status_penggunaan'   => 'nullable|string|max:255',
+        'keterangan'          => 'nullable|string',
         ]);
         
         $peralatan->update($request->all());

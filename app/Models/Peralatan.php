@@ -10,26 +10,48 @@ class Peralatan extends Model
     use HasFactory;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'peralatans';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'nama_barang',
-        'no_id_pemda',
-        'merk_tipe',      // Menggabungkan merk dan tipe
-        'ukuran',
-        'bahan',
-        'tahun_pembelian',
-        'nomor_pabrik',
-        'nomor_rangka',
-        'nomor_mesin',
-        'nomor_polisi',
-        'nomor_bpkb',
-        'asal_usul',
-        'harga',
-        'keterangan',
         'lokasi',
+        'kode_barang',
+        'nama_barang',
+        'nibr',
+        'nomor_register',
+        'spesifikasi_barang',
+        'merk_tipe',
+        'Lok', // Nama kolom kedua untuk lokasi (dengan 'L' kapital)
+        'spesifikasi_lainnya',
+        'nomor_polisi',
+        'nomor_rangka',
+        'nomor_bpkb',
+        'jumlah',
+        'satuan',
+        'harga_satuan',
+        'nilai_perolehan',
+        'cara_perolehan',
+        'tanggal_perolehan',
+        'status_penggunaan',
+        'keterangan',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'tanggal_perolehan' => 'date',
+        'harga_satuan' => 'decimal:2',
+        'nilai_perolehan' => 'decimal:2',
     ];
 }
-

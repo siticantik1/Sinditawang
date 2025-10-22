@@ -45,18 +45,26 @@ class TanahController extends Controller
     public function store(Request $request, $lokasi)
     {
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'luas' => 'required|integer',
-            'tahun_pengadaan' => 'required|digits:4',
-            'alamat' => 'required|string',
-            'status_hak' => 'required|string|max:255',
-            'tanggal_sertifikat' => 'nullable|date',
-            'nomor_sertifikat' => 'nullable|string|max:255',
-            'penggunaan' => 'required|string|max:255',
-            'asal_usul' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'keterangan' => 'nullable|string',
+            'kode_barang'       => 'required|string|max:255',
+            'nama_barang'       => 'required|string|max:255',
+            'nibar'             => 'nullable|string|max:255',
+            'nomor_register'    => 'nullable|string|max:255',
+            'spesifikasi_barang' => 'nullable|string',
+            'spesifikasi_lainnya' => 'nullable|string',
+            'jumlah'            => 'required|numeric', // Merepresentasikan luas, dll.
+            'satuan'            => 'required|string|max:255',
+            'Lok'            => 'required|string', // Alamat lengkap
+            'titik_koordinat'   => 'nullable|string|max:255',
+            'bukti_nama'        => 'nullable|string|max:255',
+            'bukti_nomor'       => 'nullable|string|max:255',
+            'bukti_tanggal'     => 'nullable|date',
+            'nama_kepemilikan_dokumen' => 'nullable|string|max:255',
+            'nilai_perolehan'   => 'required|numeric|min:0',
+            'harga_satuan'      => 'nullable|numeric|min:0',
+            'cara_perolehan'    => 'required|string|max:255',
+            'tanggal_perolehan' => 'required|date',
+            'status_penggunaan' => 'required|string|max:255',
+            'keterangan'        => 'nullable|string',
         ]);
         
         $dataToStore = $request->all();
@@ -93,18 +101,26 @@ class TanahController extends Controller
         }
 
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'luas' => 'required|integer',
-            'tahun_pengadaan' => 'required|digits:4',
-            'alamat' => 'required|string',
-            'status_hak' => 'required|string|max:255',
-            'tanggal_sertifikat' => 'nullable|date',
-            'nomor_sertifikat' => 'nullable|string|max:255',
-            'penggunaan' => 'required|string|max:255',
-            'asal_usul' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'keterangan' => 'nullable|string',
+            'kode_barang'       => 'required|string|max:255',
+            'nama_barang'       => 'required|string|max:255',
+            'nibar'             => 'nullable|string|max:255',
+            'nomor_register'    => 'nullable|string|max:255',
+            'spesifikasi_barang' => 'nullable|string',
+            'spesifikasi_lainnya' => 'nullable|string',
+            'jumlah'            => 'required|numeric', // Merepresentasikan luas, dll.
+            'satuan'            => 'required|string|max:255',
+            'Lok'            => 'required|string', // Alamat lengkap
+            'titik_koordinat'   => 'nullable|string|max:255',
+            'bukti_nama'        => 'nullable|string|max:255',
+            'bukti_nomor'       => 'nullable|string|max:255',
+            'bukti_tanggal'     => 'nullable|date',
+            'nama_kepemilikan_dokumen' => 'nullable|string|max:255',
+            'nilai_perolehan'   => 'required|numeric|min:0',
+            'harga_satuan'      => 'nullable|numeric|min:0',
+            'cara_perolehan'    => 'required|string|max:255',
+            'tanggal_perolehan' => 'required|date',
+            'status_penggunaan' => 'required|string|max:255',
+            'keterangan'        => 'nullable|string',
         ]);
         
         $tanah->update($request->all());

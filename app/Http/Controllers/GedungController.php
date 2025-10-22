@@ -46,21 +46,24 @@ class GedungController extends Controller
     public function store(Request $request, $lokasi)
     {
         $request->validate([
-            'jenis_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'kondisi_bangunan' => ['required', Rule::in(['Baik', 'Kurang Baik', 'Rusak Berat'])],
-            'bertingkat' => ['required', Rule::in(['Bertingkat', 'Tidak'])],
-            'beton' => ['required', Rule::in(['Beton', 'Tidak'])],
-            'luas_lantai' => 'required|integer',
-            'letak_lokasi' => 'required|string',
-            'dokumen_tanggal' => 'nullable|date',
-            'dokumen_nomor' => 'nullable|string|max:255',
-            'luas' => 'required|integer',
-            'status_tanah' => 'required|string',
-            'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'required|string',
-            'harga' => 'required|numeric',
-            'keterangan' => 'nullable|string',
+            'kode_barang'               => 'required|string|max:255',
+        'nama_barang'               => 'required|string|max:255',
+        'nbar'                      => 'nullable|string|max:255',
+        'nomor_register'            => 'required|string|max:255',
+        'spesifikasi_barang'        => 'nullable|string',
+        'spesifikasi_lainnya'       => 'nullable|string',
+        'jumlah_lantai'             => 'nullable|integer|min:0',
+        'Lok'                    => 'required|string', // Kolom 'Lokasi' kedua (Sesuai Kolom 13)
+        'titik_koordinat'           => 'nullable|string|max:255',
+        'status_kepemilikan_tanah'  => 'nullable|string|max:255',
+        'jumlah'                    => 'required|integer|min:0',
+        'satuan'                    => 'required|string|max:255',
+        'harga_satuan'              => 'required|numeric|min:0',
+        'nilai_perolehan'           => 'required|numeric|min:0',
+        'cara_perolehan'            => 'required|string|max:255',
+        'tanggal_perolehan'         => 'required|date',
+        'status_penggunaan'         => 'nullable|string|max:255',
+        'keterangan'                => 'nullable|string'
         ]);
         
         $dataToStore = $request->all();
@@ -93,21 +96,24 @@ class GedungController extends Controller
         if ($gedung->lokasi !== $lokasi) { abort(404); }
 
         $request->validate([
-            'jenis_barang' => 'required|string|max:255',
-            'no_id_pemda' => 'required|string|max:255',
-            'kondisi_bangunan' => ['required', Rule::in(['Baik', 'Kurang Baik', 'Rusak Berat'])],
-            'bertingkat' => ['required', Rule::in(['Bertingkat', 'Tidak'])],
-            'beton' => ['required', Rule::in(['Beton', 'Tidak'])],
-            'luas_lantai' => 'required|integer',
-            'letak_lokasi' => 'required|string',
-            'dokumen_tanggal' => 'nullable|date',
-            'dokumen_nomor' => 'nullable|string|max:255',
-            'luas' => 'required|integer',
-            'status_tanah' => 'required|string',
-            'kode_tanah' => 'nullable|string|max:255',
-            'asal_usul' => 'required|string',
-            'harga' => 'required|numeric',
-            'keterangan' => 'nullable|string',
+            'kode_barang'               => 'required|string|max:255',
+        'nama_barang'               => 'required|string|max:255',
+        'nbar'                      => 'nullable|string|max:255',
+        'nomor_register'            => 'required|string|max:255',
+        'spesifikasi_barang'        => 'nullable|string',
+        'spesifikasi_lainnya'       => 'nullable|string',
+        'jumlah_lantai'             => 'nullable|integer|min:0',
+        'Lok'                    => 'required|string', // Kolom 'Lokasi' kedua (Sesuai Kolom 13)
+        'titik_koordinat'           => 'nullable|string|max:255',
+        'status_kepemilikan_tanah'  => 'nullable|string|max:255',
+        'jumlah'                    => 'required|integer|min:0',
+        'satuan'                    => 'required|string|max:255',
+        'harga_satuan'              => 'required|numeric|min:0',
+        'nilai_perolehan'           => 'required|numeric|min:0',
+        'cara_perolehan'            => 'required|string|max:255',
+        'tanggal_perolehan'         => 'required|date',
+        'status_penggunaan'         => 'nullable|string|max:255',
+        'keterangan'                => 'nullable|string'
         ]);
         
         $gedung->update($request->all());

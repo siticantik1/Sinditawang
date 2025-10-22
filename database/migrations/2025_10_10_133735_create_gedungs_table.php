@@ -14,22 +14,24 @@ return new class extends Migration
         Schema::create('gedungs', function (Blueprint $table) {
             $table->id();
             $table->string('lokasi');
-            $table->string('jenis_barang');
-            $table->string('no_id_pemda')->nullable();
-            // REVISI: Mengubah string menjadi enum
-            $table->enum('kondisi_bangunan', ['Baik', 'Kurang Baik', 'Rusak Berat']);
-            $table->enum('bertingkat', ['Bertingkat', 'Tidak']);
-            $table->enum('beton', ['Beton', 'Tidak']);
-            $table->integer('luas_lantai');
-            $table->string('letak_lokasi');
-            $table->date('dokumen_tanggal')->nullable();
-            $table->string('dokumen_nomor')->nullable();
-            $table->integer('luas');
-            $table->string('status_tanah');
-            $table->string('kode_tanah')->nullable();
-            $table->string('asal_usul');
-            $table->decimal('harga', 15, 2);
-            $table->text('keterangan')->nullable();
+            $table->string('kode_barang');                       // Sesuai Kolom (6)
+            $table->string('nama_barang');                      // Sesuai Kolom (7)
+            $table->string('nbar')->nullable();                 // Sesuai Kolom (8) - Asumsi 'NBAR' adalah NIBR
+            $table->string('nomor_register');                   // Sesuai Kolom (9)
+            $table->string('spesifikasi_barang')->nullable();   // Sesuai Kolom (10)
+            $table->string('spesifikasi_lainnya')->nullable();  // Sesuai Kolom (11)
+            $table->unsignedInteger('jumlah_lantai')->nullable(); // Sesuai Kolom (12)
+            $table->string('Lok');                           // Sesuai Kolom (13)
+            $table->string('titik_koordinat')->nullable();      // Sesuai Kolom (14)
+            $table->string('status_kepemilikan_tanah')->nullable(); // Sesuai Kolom (15)
+            $table->unsignedInteger('jumlah');                  // Sesuai Kolom (16)
+            $table->string('satuan');                           // Sesuai Kolom (17)
+            $table->decimal('harga_satuan', 15, 2);             // Sesuai Kolom (18)
+            $table->decimal('nilai_perolehan', 15, 2);          // Sesuai Kolom (19)
+            $table->string('cara_perolehan');                   // Sesuai Kolom (20)
+            $table->date('tanggal_perolehan');                  // Sesuai Kolom (21)
+            $table->string('status_penggunaan')->nullable();     // Sesuai Kolom (22)
+            $table->text('keterangan')->nullable();             // Sesuai Kolom (23)
             $table->timestamps();
         });
     }
@@ -42,4 +44,3 @@ return new class extends Migration
         Schema::dropIfExists('gedungs');
     }
 };
-
