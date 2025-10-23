@@ -98,7 +98,7 @@ class DashboardController extends Controller
         // --- 5. Siapkan Quick Lists (Dihapus) ---
 
         // --- 6. Kirim ke View ---
-        return view('dashboard', compact(
+        return view('pages/dashboard', compact(
             'kpiTotalNilai', 
             'kpiTotalAset', 
             'chartKomposisiAset',

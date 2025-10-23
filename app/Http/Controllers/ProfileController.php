@@ -21,7 +21,7 @@ class ProfileController extends Controller
         // View 'profile.edit' sudah menggunakan Auth::user() secara langsung,
         // jadi kita hanya perlu me-return view-nya.
         // Anda bisa menambahkan data 'log aktivitas' di sini jika perlu.
-        return view('profile.edit');
+        return view('pages.edit');
     }
 
     /**
@@ -54,7 +54,7 @@ class ProfileController extends Controller
         
         $user->save(); // Garis merah seharusnya hilang sekarang
 
-        return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
+        return redirect()->route('pages.edit')->with('success', 'Profil berhasil diperbarui.');
     }
 
     /**
@@ -64,27 +64,26 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function updatePassword(Request $request)
-    {
-        /** @var \App\Models\User $user */ // <-- REVISI: Menambahkan type-hint untuk Intelephense
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // 1. Validasi input
-        $request->validate([
-            'current_password' => 'required|string',
-            'password' => 'required|string|min:8|confirmed', // 'confirmed' akan mencocokkan dengan 'password_confirmation'
-        ]);
+    // 1. Validasi input
+    $request->validate([
+        'current_password' => 'required',
+        'new_password' => 'required|min:8|confirmed',
+    ]);
 
-        // 2. Cek apakah password saat ini cocok
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('error', 'Password saat ini tidak sesuai.');
-        }
-
-        // 3. Update password baru
-        $user->password = Hash::make($request->password);
-        $user->save(); // Garis merah seharusnya hilang sekarang
-
-        return redirect()->route('profile.edit')->with('success', 'Password berhasil diubah.');
+    // 2. Cek apakah password saat ini cocok
+    if (!Hash::check($request->current_password, $user->password)) {
+        return redirect()->back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.']);
     }
+
+    // 3. Jika semua validasi lolos, update dan simpan password baru
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+
+    return redirect()->back()->with('success', 'Password berhasil diubah!');
+}
 
     /**
      * Fungsi updatePhoto() dihapus seluruhnya karena

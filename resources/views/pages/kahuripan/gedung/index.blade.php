@@ -10,7 +10,7 @@
             {{-- Form Pencarian --}}
             <form action="{{ route('lokasi.gedung.index', ['lokasi' => $lokasi]) }}" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                 <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Cari data..." name="search" value="{{ $search ?? '' }}">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Cari data..." name="search" value="{{ request('search') }}">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search fa-sm"></i>
@@ -54,49 +54,52 @@
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead class="thead-light text-center">
-                    {{-- REVISI: Header disesuaikan agar sama persis dengan KIB C --}}
+                    {{-- REVISI: Header disesuaikan dengan KIB C di gambar --}}
                     <tr>
-                        <th rowspan="2" class="align-middle">No</th>
-                        <th rowspan="2" class="align-middle">Jenis Barang / Nama Barang</th>
-                        <th colspan="2">No Id Pemda</th>
-                        <th rowspan="2" class="align-middle">Kondisi Bangunan (B, KB, RB)</th>
-                        <th colspan="2">Konstruksi Bangunan</th>
-                        <th rowspan="2" class="align-middle">Luas Lantai (M2)</th>
-                        <th rowspan="2" class="align-middle">Letak / Lokasi Alamat</th>
-                        <th colspan="2">Dokumen Gedung</th>
-                        <th rowspan="2" class="align-middle">Luas (M2)</th>
-                        <th rowspan="2" class="align-middle">Status Tanah</th>
-                        <th rowspan="2" class="align-middle">Nomor Kode Tanah</th>
-                        <th rowspan="2" class="align-middle">Asal-usul</th>
-                        <th rowspan="2" class="align-middle">Harga (Rp)</th>
-                        <th rowspan="2" class="align-middle">Ket.</th>
-                        <th rowspan="2" class="align-middle">Aksi</th>
-                    </tr>
-                    <tr>
-                        <th>Bertingkat / Tidak</th>
-                        <th>Beton / Tidak</th>
-                        <th>Tanggal</th>
-                        <th>Nomor</th>
+                        <th class="align-middle">No</th>
+                        <th class="align-middle">Kode Barang</th>
+                        <th class="align-middle">Nama Barang</th>
+                        <th class="align-middle">NIBAR</th>
+                        <th class="align-middle">Nomor Register</th>
+                        <th class="align-middle">Spesifikasi Nama Bangunan</th>
+                        <th class="align-middle">Spesifikasi Lainnya</th>
+                        <th class="align-middle">Jumlah</th>
+                        <th class="align-middle">Satuan</th>
+                        <th class="align-middle">Lokasi</th>
+                        <th class="align-middle">Titik Koordinat</th>
+                        <th class="align-middle">Status Kepemilikan Tanah</th>
+                        <th class="align-middle">Jumlah Satuan (Tanah)</th>
+                        <th class="align-middle">Harga Satuan Perolehan (Rp)</th>
+                        <th class="align-middle">Nilai Perolehan (Rp)</th>
+                        <th class="align-middle">Cara Perolehan</th>
+                        <th class="align-middle">Tanggal Perolehan</th>
+                        <th class="align-middle">Status Penggunaan</th>
+                        <th class="align-middle">Keterangan</th>
+                        <th class="align-middle">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($dataGedung as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataGedung->firstItem() - 1 }}</td>
-                        <td>{{ $item->jenis_barang }}</td>
-                        <td>{{ $item->no_id_pemda }}</td>
-                        <td class="text-center">{{ $item->kondisi_bangunan }}</td>
-                        <td class="text-center">{{ $item->bertingkat }}</td>
-                        <td class="text-center">{{ $item->beton }}</td>
-                        <td class="text-right">{{ $item->luas_lantai }}</td>
-                        <td>{{ $item->letak_lokasi }}</td>
-                        <td class="text-center">{{ $item->dokumen_tanggal ? \Carbon\Carbon::parse($item->dokumen_tanggal)->format('d-m-Y') : '' }}</td>
-                        <td>{{ $item->dokumen_nomor }}</td>
-                        <td class="text-right">{{ $item->luas }}</td>
-                        <td>{{ $item->status_tanah }}</td>
-                        <td>{{ $item->kode_tanah }}</td>
-                        <td>{{ $item->asal_usul }}</td>
-                        <td class="text-right">{{ number_format($item->harga, 0, ',', '.') }}</td>
+                        {{-- ASUMSI: Sesuaikan nama properti ini dengan Model Anda --}}
+                        <td>{{ $item->kode_barang }}</td>
+                        <td>{{ $item->nama_barang }}</td>
+                        <td>{{ $item->nibar }}</td>
+                        <td>{{ $item->nomor_register }}</td>
+                        <td>{{ $item->spesifikasi_nama_bangunan }}</td>
+                        <td>{{ $item->spesifikasi_lainnya }}</td>
+                        <td class="text-center">{{ $item->jumlah }}</td>
+                        <td>{{ $item->satuan }}</td>
+                        <td>{{ $item->lokasi }}</td>
+                        <td>{{ $item->titik_koordinat }}</td>
+                        <td>{{ $item->status_kepemilikan_tanah }}</td>
+                        <td>{{ $item->jumlah_satuan_tanah }}</td>
+                        <td class="text-right">{{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($item->nilai_perolehan, 0, ',', '.') }}</td>
+                        <td>{{ $item->cara_perolehan }}</td>
+                        <td class="text-center">{{ $item->tanggal_perolehan ? \Carbon\Carbon::parse($item->tanggal_perolehan)->format('d-m-Y') : '' }}</td>
+                        <td>{{ $item->status_penggunaan }}</td>
                         <td>{{ $item->keterangan }}</td>
                         <td class="text-center">
                             <a href="{{ route('lokasi.gedung.edit', ['lokasi' => $lokasi, 'gedung' => $item->id]) }}" class="btn btn-sm btn-warning" title="Edit Data"><i class="fas fa-edit"></i></a>
@@ -109,7 +112,8 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="18" class="text-center">Belum ada data.</td>
+                        {{-- REVISI: Colspan disesuaikan dengan jumlah kolom baru (20) --}}
+                        <td colspan="20" class="text-center">Belum ada data.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -118,9 +122,8 @@
 
         {{-- Pagination --}}
         <div class="d-flex justify-content-end">
-            {{ $dataGedung->appends(['search' => $search ?? ''])->links() }}
+            {{ $dataGedung->appends(['search' => request('search')])->links() }}
         </div>
     </div>
 </div>
 @endsection
-

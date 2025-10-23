@@ -23,6 +23,7 @@
             <th width="5%">No</th>
             <th>Nama</th>
             <th>Email</th>
+            <th>Password</th>
             <th width="20%">Aksi</th>
         </tr>
     </thead>
@@ -32,6 +33,7 @@
             <td>{{ $loop->iteration }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
+            <td>{{ $user->password }}</td>
             <td>
                 <form action="{{ route('user.destroy', $user->id) }}" method="POST">
                     <a class="btn btn-info btn-sm" href="{{ route('user.show', $user->id) }}">Detail</a>

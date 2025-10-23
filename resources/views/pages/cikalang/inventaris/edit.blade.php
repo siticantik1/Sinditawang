@@ -3,7 +3,7 @@
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Edit Inventaris di Ruangan: {{ $room->name }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Edit Inventaris Ruangan: {{ $room->name }}</h6>
     </div>
     <div class="card-body">
         <form action="{{ route('lokasi.inventaris.update', ['lokasi' => $lokasi, 'room' => $room->id, 'inventari' => $inventari->id]) }}" method="POST">
@@ -12,56 +12,64 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Nama Barang / Jenis Barang</label>
-                        <input type="text" name="nama_barang" class="form-control" value="{{ old('nama_barang', $inventari->nama_barang) }}" required>
+                        <label for="nama_barang">Nama Barang</label>
+                        <input type="text" class="form-control @error('nama_barang') is-invalid @enderror" name="nama_barang" value="{{ old('nama_barang', $inventari->nama_barang) }}" required>
+                        @error('nama_barang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Merk / Model</label>
-                        <input type="text" name="merk_model" class="form-control" value="{{ old('merk_model', $inventari->merk_model) }}">
+                        <label for="kode_barang">Kode Barang</label>
+                        <input type="text" class="form-control @error('kode_barang') is-invalid @enderror" name="kode_barang" value="{{ old('kode_barang', $inventari->kode_barang) }}">
+                        @error('kode_barang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Bahan</label>
-                        <input type="text" name="bahan" class="form-control" value="{{ old('bahan', $inventari->bahan) }}">
+                        <label for="nibar">NIBAR (Nomor Inventaris Barang)</label>
+                        <input type="text" class="form-control @error('nibar') is-invalid @enderror" name="nibar" value="{{ old('nibar', $inventari->nibar) }}">
+                        @error('nibar') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Tahun Pembelian</label>
-                        <input type="number" name="tahun_pembelian" class="form-control" placeholder="YYYY" value="{{ old('tahun_pembelian', $inventari->tahun_pembelian) }}" required>
+                        <label for="nomor_register">Nomor Register</label>
+                        <input type="text" class="form-control @error('nomor_register') is-invalid @enderror" name="nomor_register" value="{{ old('nomor_register', $inventari->nomor_register) }}">
+                        @error('nomor_register') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="spesifikasi_nama_barang">Spesifikasi Nama Barang</label>
+                        <input type="text" class="form-control @error('spesifikasi_nama_barang') is-invalid @enderror" name="spesifikasi_nama_barang" value="{{ old('spesifikasi_nama_barang', $inventari->spesifikasi_nama_barang) }}">
+                        @error('spesifikasi_nama_barang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
+
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>No. Kode Barang</label>
-                        <input type="text" name="kode_barang" class="form-control" value="{{ old('kode_barang', $inventari->kode_barang) }}" required>
+                        <label for="merek_tipe">Merek / Tipe</label>
+                        <input type="text" class="form-control @error('merek_tipe') is-invalid @enderror" name="merek_tipe" value="{{ old('merek_tipe', $inventari->merek_tipe) }}">
+                        @error('merek_tipe') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Jumlah Barang</label>
-                        <input type="number" name="jumlah" class="form-control" value="{{ old('jumlah', $inventari->jumlah) }}" required>
+                        <label for="tahun_perolehan">Tahun Perolehan</label>
+                        <input type="number" class="form-control @error('tahun_perolehan') is-invalid @enderror" name="tahun_perolehan" value="{{ old('tahun_perolehan', $inventari->tahun_perolehan) }}" placeholder="Contoh: 2024">
+                        @error('tahun_perolehan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Harga Beli / Perolehan (Rp)</label>
-                        <input type="number" name="harga_perolehan" class="form-control" value="{{ old('harga_perolehan', $inventari->harga_perolehan) }}" required>
+                        <label for="jumlah">Jumlah</label>
+                        <input type="number" class="form-control @error('jumlah') is-invalid @enderror" name="jumlah" value="{{ old('jumlah', $inventari->jumlah) }}">
+                        @error('jumlah') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label>Keadaan Barang</label>
-                        <select name="kondisi" class="form-control" required>
-                            <option value="B" {{ old('kondisi', $inventari->kondisi) == 'B' ? 'selected' : '' }}>Baik (B)</option>
-                            <option value="KB" {{ old('kondisi', $inventari->kondisi) == 'KB' ? 'selected' : '' }}>Kurang Baik (KB)</option>
-                            <option value="RB" {{ old('kondisi', $inventari->kondisi) == 'RB' ? 'selected' : '' }}>Rusak Berat (RB)</option>
-                        </select>
+                        <label for="satuan">Satuan</label>
+                        <input type="text" class="form-control @error('satuan') is-invalid @enderror" name="satuan" value="{{ old('satuan', $inventari->satuan) }}" placeholder="Contoh: Buah, Unit, Set">
+                        @error('satuan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="keterangan">Keterangan</label>
+                        <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" rows="3">{{ old('keterangan', $inventari->keterangan) }}</textarea>
+                        @error('keterangan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Keterangan</label>
-                <textarea name="keterangan" class="form-control" rows="3">{{ old('keterangan', $inventari->keterangan) }}</textarea>
-            </div>
             <hr>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('lokasi.inventaris.index', ['lokasi' => $lokasi, 'room' => $room->id]) }}" class="btn btn-secondary mr-2">Batal</a>
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
+            <a href="{{ route('lokasi.inventaris.index', ['lokasi' => $lokasi, 'room' => $room->id]) }}" class="btn btn-secondary">Batal</a>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 </div>
 @endsection
-

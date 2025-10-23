@@ -52,7 +52,6 @@
         <div class="table-responsive">
             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                 <thead class="thead-light text-center">
-                    {{-- REVISI: Header disesuaikan dengan format di gambar --}}
                     <tr>
                         <th rowspan="2" class="align-middle">No</th>
                         <th rowspan="2" class="align-middle">NIBAR</th>
@@ -75,7 +74,6 @@
                     @forelse ($dataInventaris as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataInventaris->firstItem() - 1 }}</td>
-                        {{-- ASUMSI: Sesuaikan nama properti ini dengan Model Anda --}}
                         <td>{{ $item->nibar }}</td>
                         <td>{{ $item->nomor_register }}</td>
                         <td>{{ $item->kode_barang }}</td>
@@ -88,6 +86,7 @@
                         <td>{{ $item->keterangan }}</td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
+                                {{-- Tombol ini sudah benar, menargetkan #moveModal --}}
                                 <button type="button" class="btn btn-sm btn-info move-btn mr-1" data-toggle="modal" data-target="#moveModal" data-id="{{ $item->id }}" data-nama="{{ $item->nama_barang }}" title="Pindah Barang">
                                     <i class="fas fa-truck"></i>
                                 </button>
@@ -110,19 +109,64 @@
     </div>
 </div>
 
-{{-- Modal untuk Pindah Barang (Tidak diubah) --}}
-@include('inventaris.partials.modal-move') {{-- Asumsi modal dipisah ke partial --}}
+{{-- ----------------------------------------------------------------- --}}
+{{-- REVISI UTAMA DI SINI --}}
+{{-- ----------------------------------------------------------------- --}}
+
+{{-- @include('inventaris.index')  --}}{{-- <-- DIHAPUS: Baris ini yang menyebabkan error --}}
+
+{{-- DITAMBAHKAN: Kode Modal untuk Pindah Barang diletakkan langsung di sini --}}
+<div class="modal fade" id="moveModal" tabindex="-1" role="dialog" aria-labelledby="moveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moveModalLabel">Pindahkan Barang Inventaris</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{-- Form ini ID-nya `moveForm`, sesuai dengan yang dicari JavaScript --}}
+            <form id="moveForm" action="" method="POST">
+                @csrf
+                @method('PUT') {{-- Atau PATCH, sesuaikan dengan route Anda --}}
+                <div class="modal-body">
+                    <p>Anda akan memindahkan barang: <strong id="namaBarangPindah">Nama Barang</strong></p>
+                    <hr>
+                    <div class="form-group">
+                        <label for="new_room_id">Pindahkan ke Ruangan:</label>
+                        <select name="new_room_id" id="new_room_id" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Ruangan Tujuan --</option>
+                            {{-- PENTING: Anda perlu mengirimkan variabel $allRooms dari Controller --}}
+                            @foreach ($allRooms as $roomOption)
+                                <option value="{{ $roomOption->id }}">{{ $roomOption->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Pindahkan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
+{{-- Script ini sudah benar, tidak perlu diubah --}}
 <script>
     $(document).ready(function() {
         $('.move-btn').on('click', function() {
             var itemId = $(this).data('id');
             var itemName = $(this).data('nama');
+            // Membuat URL tujuan untuk action form
             var url = "{{ url($lokasi . '/room/' . $room->id . '/inventaris') }}/" + itemId + "/move";
             
+            // Mengatur action form di modal
             $('#moveForm').attr('action', url);
+            // Menampilkan nama barang di modal
             $('#namaBarangPindah').text(itemName);
         });
     });

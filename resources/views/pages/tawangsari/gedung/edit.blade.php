@@ -3,7 +3,7 @@
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Edit Data Gedung & Bangunan (KIB C) - {{ ucfirst($lokasi) }}</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Edit Data Gedung & Bangunan (KIB C)</h6>
     </div>
     <div class="card-body">
         <form action="{{ route('lokasi.gedung.update', ['lokasi' => $lokasi, 'gedung' => $gedung->id]) }}" method="POST">
@@ -13,112 +13,105 @@
                 {{-- Kolom Kiri --}}
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="jenis_barang">Jenis Barang / Nama Barang</label>
-                        <input type="text" class="form-control" name="jenis_barang" value="{{ old('jenis_barang', $gedung->jenis_barang) }}" required>
+                        <label for="kode_barang">Kode Barang</label>
+                        <input type="text" class="form-control @error('kode_barang') is-invalid @enderror" name="kode_barang" value="{{ old('kode_barang', $gedung->kode_barang) }}">
+                        @error('kode_barang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-                    
                     <div class="form-group">
-                        <label for="no_id_pemda">No Id Pemda</label>
-                        <input type="text" class="form-control" name="no_id_pemda" value="{{ old('no_id_pemda', $gedung->no_id_pemda) }}" required>
+                        <label for="nama_barang">Nama Barang</label>
+                        <input type="text" class="form-control @error('nama_barang') is-invalid @enderror" name="nama_barang" value="{{ old('nama_barang', $gedung->nama_barang) }}" required>
+                        @error('nama_barang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-                    
-                    
-
-                    <div class="card card-body border-left-warning mb-3">
-                        <h6 class="font-weight-bold">Konstruksi Bangunan</h6>
-                         <div class="form-row">
-                            <div class="form-group col-md-6 mb-0">
-                                <label for="bertingkat">Bertingkat / Tidak</label>
-                                <select name="bertingkat" class="form-control" required>
-                                    <option value="Bertingkat" {{ old('bertingkat', $gedung->bertingkat) == 'Bertingkat' ? 'selected' : '' }}>Bertingkat</option>
-                                    <option value="Tidak" {{ old('bertingkat', $gedung->bertingkat) == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6 mb-0">
-                                <label for="beton">Beton / Tidak</label>
-                                <select name="beton" class="form-control" required>
-                                    <option value="Beton" {{ old('beton', $gedung->beton) == 'Beton' ? 'selected' : '' }}>Beton</option>
-                                    <option value="Tidak" {{ old('beton', $gedung->beton) == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="nibar">NIBAR</label>
+                        <input type="text" class="form-control @error('nibar') is-invalid @enderror" name="nibar" value="{{ old('nibar', $gedung->nibar) }}">
+                        @error('nibar') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
+                    <div class="form-group">
+                        <label for="nomor_register">Nomor Register</label>
+                        <input type="text" class="form-control @error('nomor_register') is-invalid @enderror" name="nomor_register" value="{{ old('nomor_register', $gedung->nomor_register) }}">
+                        @error('nomor_register') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="spesifikasi_nama_bangunan">Spesifikasi Nama Bangunan</label>
+                        <input type="text" class="form-control @error('spesifikasi_nama_bangunan') is-invalid @enderror" name="spesifikasi_nama_bangunan" value="{{ old('spesifikasi_nama_bangunan', $gedung->spesifikasi_nama_bangunan) }}">
+                        @error('spesifikasi_nama_bangunan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="spesifikasi_lainnya">Spesifikasi Lainnya</label>
+                        <input type="text" class="form-control @error('spesifikasi_lainnya') is-invalid @enderror" name="spesifikasi_lainnya" value="{{ old('spesifikasi_lainnya', $gedung->spesifikasi_lainnya) }}">
+                        @error('spesifikasi_lainnya') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="jumlah">Jumlah</label>
+                        <input type="number" class="form-control @error('jumlah') is-invalid @enderror" name="jumlah" value="{{ old('jumlah', $gedung->jumlah) }}">
+                        @error('jumlah') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="satuan">Satuan</label>
+                        <input type="text" class="form-control @error('satuan') is-invalid @enderror" name="satuan" value="{{ old('satuan', $gedung->satuan) }}">
+                        @error('satuan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
                      <div class="form-group">
-                        <label for="luas_lantai">Luas Lantai (M2)</label>
-                        <input type="number" class="form-control" name="luas_lantai" value="{{ old('luas_lantai', $gedung->luas_lantai) }}" required>
+                        <label for="lokasi">Lokasi</label>
+                        <textarea class="form-control @error('lokasi') is-invalid @enderror" name="lokasi" rows="3">{{ old('lokasi', $gedung->lokasi) }}</textarea>
+                        @error('lokasi') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
                     <div class="form-group">
-                        <label for="letak_lokasi">Letak / Lokasi Alamat</label>
-                        <textarea name="letak_lokasi" class="form-control" rows="3" required>{{ old('letak_lokasi', $gedung->letak_lokasi) }}</textarea>
+                        <label for="titik_koordinat">Titik Koordinat</label>
+                        <input type="text" class="form-control @error('titik_koordinat') is-invalid @enderror" name="titik_koordinat" value="{{ old('titik_koordinat', $gedung->titik_koordinat) }}">
+                        @error('titik_koordinat') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
                 </div>
 
                 {{-- Kolom Kanan --}}
                 <div class="col-md-6">
-                    <div class="card card-body border-left-info mb-3">
-                        <h6 class="font-weight-bold">Dokumen Gedung</h6>
-                        <div class="form-row">
-                            <div class="form-group col-md-6 mb-0">
-                                <label for="dokumen_tanggal">Tanggal</label>
-                                <input type="date" class="form-control" name="dokumen_tanggal" value="{{ old('dokumen_tanggal', $gedung->dokumen_tanggal) }}">
-                            </div>
-                            <div class="form-group col-md-6 mb-0">
-                                <label for="dokumen_nomor">Nomor</label>
-                                <input type="text" class="form-control" name="dokumen_nomor" value="{{ old('dokumen_nomor', $gedung->dokumen_nomor) }}">
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="form-group">
-                        <label for="luas">Luas Tanah (M2)</label>
-                        <input type="number" class="form-control" name="luas" value="{{ old('luas', $gedung->luas) }}" required>
+                        <label for="status_kepemilikan_tanah">Status Kepemilikan Tanah</label>
+                        <input type="text" class="form-control @error('status_kepemilikan_tanah') is-invalid @enderror" name="status_kepemilikan_tanah" value="{{ old('status_kepemilikan_tanah', $gedung->status_kepemilikan_tanah) }}">
+                        @error('status_kepemilikan_tanah') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
                     <div class="form-group">
-                        <label for="status_tanah">Status Tanah</label>
-                        <input type="text" class="form-control" name="status_tanah" value="{{ old('status_tanah', $gedung->status_tanah) }}" required>
+                        <label for="jumlah_satuan_tanah">Jumlah Satuan (Tanah)</label>
+                        <input type="text" class="form-control @error('jumlah_satuan_tanah') is-invalid @enderror" name="jumlah_satuan_tanah" value="{{ old('jumlah_satuan_tanah', $gedung->jumlah_satuan_tanah) }}" placeholder="Contoh: 100 M2">
+                        @error('jumlah_satuan_tanah') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
-                     <div class="form-group">
-                        <label for="kode_tanah">Nomor Kode Tanah</label>
-                        <input type="text" class="form-control" name="kode_tanah" value="{{ old('kode_tanah', $gedung->kode_tanah) }}">
-                    </div>
-
                     <div class="form-group">
-                        <label for="asal_usul">Asal-usul</label>
-                        <input type="text" class="form-control" name="asal_usul" value="{{ old('asal_usul', $gedung->asal_usul) }}" required>
+                        <label for="harga_satuan">Harga Satuan (Rp)</label>
+                        <input type="number" class="form-control @error('harga_satuan') is-invalid @enderror" name="harga_satuan" value="{{ old('harga_satuan', $gedung->harga_satuan) }}">
+                        @error('harga_satuan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
-                     <div class="form-group">
-                        <label for="harga">Harga (Rp)</label>
-                        <input type="number" class="form-control" name="harga" value="{{ old('harga', $gedung->harga) }}" required>
-                    </div>
-                    
                     <div class="form-group">
-                        <label for="kondisi_bangunan">Kondisi Bangunan</label>
-                        <select name="kondisi_bangunan" class="form-control" required>
-                            <option value="Baik" {{ old('kondisi_bangunan', $gedung->kondisi_bangunan) == 'Baik' ? 'selected' : '' }}>Baik (B)</option>
-                            <option value="Kurang Baik" {{ old('kondisi_bangunan', $gedung->kondisi_bangunan) == 'Kurang Baik' ? 'selected' : '' }}>Kurang Baik (KB)</option>
-                            <option value="Rusak Berat" {{ old('kondisi_bangunan', $gedung->kondisi_bangunan) == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat (RB)</option>
-                        </select>
+                        <label for="nilai_perolehan">Nilai Perolehan (Rp)</label>
+                        <input type="number" class="form-control @error('nilai_perolehan') is-invalid @enderror" name="nilai_perolehan" value="{{ old('nilai_perolehan', $gedung->nilai_perolehan) }}">
+                        @error('nilai_perolehan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
-
+                    <div class="form-group">
+                        <label for="cara_perolehan">Cara Perolehan</label>
+                        <input type="text" class="form-control @error('cara_perolehan') is-invalid @enderror" name="cara_perolehan" value="{{ old('cara_perolehan', $gedung->cara_perolehan) }}">
+                        @error('cara_perolehan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_perolehan">Tanggal Perolehan</label>
+                        <input type="date" class="form-control @error('tanggal_perolehan') is-invalid @enderror" name="tanggal_perolehan" value="{{ old('tanggal_perolehan', $gedung->tanggal_perolehan) }}">
+                        @error('tanggal_perolehan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="status_penggunaan">Status Penggunaan</label>
+                        <input type="text" class="form-control @error('status_penggunaan') is-invalid @enderror" name="status_penggunaan" value="{{ old('status_penggunaan', $gedung->status_penggunaan) }}">
+                        @error('status_penggunaan') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
                     <div class="form-group">
                         <label for="keterangan">Keterangan</label>
-                        <textarea class="form-control" name="keterangan" rows="2">{{ old('keterangan', $gedung->keterangan) }}</textarea>
+                        <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" rows="3">{{ old('keterangan', $gedung->keterangan) }}</textarea>
+                        @error('keterangan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                 </div>
             </div>
             <hr>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('lokasi.gedung.index', ['lokasi' => $lokasi]) }}" class="btn btn-secondary mr-2">Batal</a>
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
+            <a href="{{ route('lokasi.gedung.index', ['lokasi' => $lokasi]) }}" class="btn btn-secondary">Batal</a>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 </div>
 @endsection
-

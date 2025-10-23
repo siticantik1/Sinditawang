@@ -10,7 +10,7 @@
             {{-- Form Pencarian --}}
             <form action="{{ route('lokasi.peralatan.index', ['lokasi' => $lokasi]) }}" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                 <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Cari data..." name="search" value="{{ $search ?? '' }}">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Cari data..." name="search" value="{{ request('search') }}">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search fa-sm"></i>
@@ -19,7 +19,7 @@
                 </div>
             </form>
 
-            {{-- Tombol Aksi dengan Dropdown (Bootstrap 4) --}}
+            {{-- Tombol Aksi dengan Dropdown --}}
             <div class="btn-group ml-3">
                 <a href="{{ route('lokasi.peralatan.create', ['lokasi' => $lokasi]) }}" class="btn btn-primary">
                     <i class="fas fa-plus-circle fa-sm text-white-50"></i> Tambah Data
@@ -54,48 +54,58 @@
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead class="thead-light text-center">
-                    {{-- REVISI: Header disesuaikan agar sama persis dengan KIB B --}}
+                    {{-- REVISI: Header disesuaikan dengan format KIB B di gambar --}}
                     <tr>
                         <th rowspan="2" class="align-middle">No</th>
-                        <th rowspan="2" class="align-middle">Nama Barang / Jenis Barang</th>
-                        <th rowspan="2" class="align-middle">No Id Pemda</th>
-                        <th rowspan="2" class="align-middle">Merk / Tipe</th>
-                        <th rowspan="2" class="align-middle">Ukuran / CC</th>
-                        <th rowspan="2" class="align-middle">Bahan</th>
-                        <th rowspan="2" class="align-middle">Tahun Pembelian</th>
-                        <th colspan="5">Nomor Identitas</th>
-                        <th rowspan="2" class="align-middle">Asal Usul</th>
-                        <th rowspan="2" class="align-middle">Harga (Rp)</th>
+                        <th rowspan="2" class="align-middle">Kode Barang</th>
+                        <th rowspan="2" class="align-middle">Nama Barang</th>
+                        <th rowspan="2" class="align-middle">NIBAR</th>
+                        <th rowspan="2" class="align-middle">Nomor Register</th>
+                        <th colspan="3">Spesifikasi Barang</th>
+                        <th colspan="4">Kendaraan (Diisi*)</th>
+                        <th rowspan="2" class="align-middle">Jumlah</th>
+                        <th rowspan="2" class="align-middle">Satuan</th>
+                        <th rowspan="2" class="align-middle">Harga Satuan Perolehan (Rp)</th>
+                        <th rowspan="2" class="align-middle">Nilai Perolehan (Rp)</th>
+                        <th rowspan="2" class="align-middle">Cara Perolehan</th>
+                        <th rowspan="2" class="align-middle">Tanggal Perolehan</th>
+                        <th rowspan="2" class="align-middle">Status Penggunaan</th>
                         <th rowspan="2" class="align-middle">Keterangan</th>
                         <th rowspan="2" class="align-middle">Aksi</th>
                     </tr>
                     <tr>
-                        
-                        <th>Pabrik</th>
-                        <th>Rangka</th>
-                        <th>Mesin</th>
-                        <th>Polisi</th>
+                        <th>Merek/Tipe</th>
+                        <th>Ukuran</th>
+                        <th>Spesifikasi Lainnya</th>
+                        <th>No. Rangka</th>
+                        <th>No. Mesin</th>
+                        <th>No. Polisi</th>
                         <th>BPKB</th>
                     </tr>
-                    {{-- REVISI: Menambahkan baris nomor kolom --}}
                 </thead>
                 <tbody>
                     @forelse ($dataPeralatan as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration + $dataPeralatan->firstItem() - 1 }}</td>
+                        {{-- ASUMSI: Sesuaikan nama properti ini dengan Model Anda --}}
+                        <td>{{ $item->kode_barang }}</td>
                         <td>{{ $item->nama_barang }}</td>
-                        <td>{{ $item->no_id_pemda }}</td>
-                        <td>{{ $item->merk_tipe }}</td>
+                        <td>{{ $item->nibar }}</td>
+                        <td>{{ $item->nomor_register }}</td>
+                        <td>{{ $item->merek_tipe }}</td>
                         <td>{{ $item->ukuran }}</td>
-                        <td>{{ $item->bahan }}</td>
-                        <td class="text-center">{{ $item->tahun_pembelian }}</td>
-                        <td>{{ $item->nomor_pabrik }}</td>
+                        <td>{{ $item->spesifikasi_lainnya }}</td>
                         <td>{{ $item->nomor_rangka }}</td>
                         <td>{{ $item->nomor_mesin }}</td>
                         <td>{{ $item->nomor_polisi }}</td>
                         <td>{{ $item->nomor_bpkb }}</td>
-                        <td>{{ $item->asal_usul }}</td>
-                        <td class="text-right">{{ number_format($item->harga, 0, ',', '.') }}</td>
+                        <td class="text-center">{{ $item->jumlah }}</td>
+                        <td>{{ $item->satuan }}</td>
+                        <td class="text-right">{{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($item->nilai_perolehan, 0, ',', '.') }}</td>
+                        <td>{{ $item->cara_perolehan }}</td>
+                        <td class="text-center">{{ $item->tanggal_perolehan ? \Carbon\Carbon::parse($item->tanggal_perolehan)->format('d-m-Y') : '' }}</td>
+                        <td>{{ $item->status_penggunaan }}</td>
                         <td>{{ $item->keterangan }}</td>
                         <td class="text-center">
                             <a href="{{ route('lokasi.peralatan.edit', ['lokasi' => $lokasi, 'peralatan' => $item->id]) }}" class="btn btn-sm btn-warning" title="Edit Data"><i class="fas fa-edit"></i></a>
@@ -108,7 +118,8 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="17" class="text-center">Belum ada data.</td>
+                        {{-- REVISI: Colspan disesuaikan dengan jumlah kolom baru (21) --}}
+                        <td colspan="21" class="text-center">Belum ada data.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -117,9 +128,8 @@
 
         {{-- Pagination --}}
         <div class="d-flex justify-content-end">
-            {{ $dataPeralatan->appends(['search' => $search])->links() }}
+            {{ $dataPeralatan->appends(['search' => request('search')])->links() }}
         </div>
     </div>
 </div>
 @endsection
-
