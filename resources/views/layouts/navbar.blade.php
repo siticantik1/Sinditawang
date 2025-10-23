@@ -16,6 +16,7 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
+                {{-- Asumsi $notifications didapat dari AppServiceProvider/View Composer --}}
                 @if (isset($notifications) && $notifications->count() > 0)
                     <span class="badge badge-danger badge-counter">{{ $notifications->count() }}</span>
                 @endif
@@ -51,21 +52,7 @@
             </div>
         </li>
         
-        {{-- Tanggal --}}
-        <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" role="button">
-                <i class="fas fa-calendar-alt fa-fw"></i>
-                <span id="liveDate" class="ml-1 d-none d-lg-inline text-gray-600 small"></span>
-            </a>
-        </li>
         
-        {{-- Jam Digital --}}
-        <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" role="button">
-                <i class="fas fa-clock fa-fw"></i>
-                <span id="liveClock" class="ml-1 d-none d-lg-inline text-gray-600 small"></span>
-            </a>
-        </li>
 
         <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -75,11 +62,16 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                 <!-- Foto Profil Placeholder -->
+                <img class="img-profile rounded-circle"
+                     src="https://placehold.co/60x60/4e73df/ffffff?text={{ strtoupper(substr(Auth::user()->name, 0, 1)) }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                
+                {{-- REVISI: Link profil diubah ke route('profile.edit') --}}
+                <a class="dropdown-item" href="{{ route('profile.edit') }}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
                 </a>
@@ -94,4 +86,3 @@
     </ul>
 
 </nav>
-

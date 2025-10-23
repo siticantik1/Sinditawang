@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController; // Import Controller baru
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 
 // --- CONTROLLER DINAMIS (SATU UNTUK SEMUA) ---
 use App\Http\Controllers\TanahController;
@@ -44,9 +45,17 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // REVISI: Rute Profil (untuk user yang sedang login)
+    // Menggunakan prefix /profile agar tidak bentrok dengan /user
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    // Hapus: Route::resource('user', ProfilController::class); // <-- Dihapus karena bentrok
+
     // REVISI: Tambahkan rute untuk menandai notifikasi sudah dibaca
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 
+    // Rute Manajemen User (untuk admin)
     Route::resource('user', UserController::class);
 
     // --- RUTE DINAMIS UNTUK SEMUA MODUL ---
@@ -81,4 +90,3 @@ Route::middleware('auth')->group(function () {
             Route::resource('rusak', RusakController::class);
         });
 });
-
